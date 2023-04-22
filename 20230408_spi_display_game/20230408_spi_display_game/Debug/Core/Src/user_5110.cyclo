@@ -1,0 +1,16 @@
+user_5110.c:104:6:LCD1_Init	1
+user_5110.c:113:6:LCD2_Init	1
+user_5110.c:125:6:LCD1_Reset	1
+user_5110.c:131:6:LCD2_Reset	1
+user_5110.c:142:6:LCD1_Set_Postion	1
+user_5110.c:147:6:LCD2_Set_Postion	1
+user_5110.c:155:6:LCD1_Clear	3
+user_5110.c:168:6:LCD2_Clear	3
+user_5110.c:186:6:LCD1_Write_Char	2
+user_5110.c:192:6:LCD2_Write_Char	2
+user_5110.c:204:6:LCD1_Write_String	2
+user_5110.c:212:6:LCD2_Write_String	2
+user_5110.c:224:6:LCD1_Write_Command	1
+user_5110.c:232:6:LCD2_Write_Command	1
+user_5110.c:244:6:LCD1_Write_Data	1
+user_5110.c:252:6:LCD2_Write_Data	1
