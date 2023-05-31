@@ -1,40 +1,71 @@
-byte my_shared_var = 1;
-SemaphoreHandle_t xMutex;
+/*CABEÇALHO*/
 
-void teste(void *pvParameters){
+
+//Variáveis globais de controle do cronometro
+byte start = 0;
+byte stop = 0;
+byte reset = 0;
+
+//Variáveis globais das parciais, com 3 posições cada
+char p1[3];
+char p2[3];
+
+//Variáveis globais do tempo
+int hora = 0;
+int minuto = 0;
+int segundo = 0;
+
+//Mutex para proteção das variáveis
+SemaphoreHandle_t xMutex01;
+SemaphoreHandle_t xMutex02;
+
+
+void task_tempo(void *pvParameters){
     while (true){
-    xSemaphoreTake(xMutex,portMAX_DELAY);
+    xSemaphoreTake(xMutex01,portMAX_DELAY);
     Serial.print("Task 1: ");
-    Serial.println(my_shared_var);
-    my_shared_var =  my_shared_var > 1 ? my_shared_var-1 : my_shared_var+1;
+    Serial.println(start);
+    start =  start > 1 ? start-1 : start+1;
     delay(500);
-    xSemaphoreGive(xMutex);
+    xSemaphoreGive(xMutex01);
     
     }
 }
 
-void teste2(void *pvParameters){
+void task_btn(void *pvParameters){
     while (true){
-    xSemaphoreTake(xMutex,portMAX_DELAY);
+    xSemaphoreTake(xMutex01,portMAX_DELAY);
     Serial.print("Task 2: ");
-    Serial.println(my_shared_var);
-    my_shared_var =  my_shared_var > 1 ? my_shared_var-1 : my_shared_var+1;
+    Serial.println(start);
+    start =  start > 1 ? start-1 : start+1;
     delay(500);
-    xSemaphoreGive(xMutex);
+    xSemaphoreGive(xMutex01);
+    
+    }
+}
+
+void task_serial(void *pvParameters){
+    while (true){
+    xSemaphoreTake(xMutex01,portMAX_DELAY);
+    Serial.print("Task 2: ");
+    Serial.println(start);
+    start =  start > 1 ? start-1 : start+1;
+    delay(500);
+    xSemaphoreGive(xMutex01);
     
     }
 }
 
 void setup(){
   Serial.begin(115200);
-    xMutex = xSemaphoreCreateMutex();
-    if(xMutex != NULL){
-         xTaskCreatePinnedToCore(teste, "Print1", 10000,NULL, 3, NULL,0);
-         xTaskCreatePinnedToCore(teste2, "Print2", 10000,NULL, 3, NULL,0);
+    xMutex01 = xSemaphoreCreateMutex();
+    if(xMutex01 != NULL){
+         xTaskCreatePinnedToCore(task_tempo, "Print1", 10000,NULL, 3, NULL,0);
+         xTaskCreatePinnedToCore(task_btn, "Print2", 10000,NULL, 3, NULL,0);
+         xTaskCreatePinnedToCore(task_serial, "Print2", 10000,NULL, 3, NULL,0);
     }
 }
 
 void loop(){
-    delay(2000);
-    Serial.println("batata");
+  //limbo
 }
