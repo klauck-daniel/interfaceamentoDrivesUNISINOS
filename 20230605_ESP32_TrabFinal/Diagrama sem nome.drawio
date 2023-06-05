@@ -1,36 +1,9 @@
-<mxfile host="app.diagrams.net" modified="2023-06-05T23:46:43.069Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="Wc9dK4ckUBsk8bXSHVol" version="21.3.5" type="github">
+<mxfile host="app.diagrams.net" modified="2023-06-05T23:51:55.162Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="GDAolTtGfukNaHwnScFo" version="21.3.5" type="github">
   <diagram name="Página-1" id="CQQQ1_xxynBM_lZkvn02">
-    <mxGraphModel dx="1434" dy="792" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2261" dy="792" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-1" value="IN_1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="570" y="540" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-2" value="IN_2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="370" y="520" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-3" value="IN_3" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="150" y="490" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-4" value="IN_4" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="220" y="430" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-5" value="A_0" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="240" y="550" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-6" value="OUT_1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="50" y="430" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-7" value="OUT_2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="50" y="500" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-8" value="OUT_3" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="50" y="570" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-9" value="OUT_4" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="50" y="640" width="60" height="60" as="geometry" />
-        </mxCell>
         <mxCell id="xhrllQ4y0iZZigfFHR5F-10" value="Inicio" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="650" y="460" width="120" height="60" as="geometry" />
         </mxCell>
@@ -41,10 +14,7 @@
           <mxGeometry x="570" y="310" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="xhrllQ4y0iZZigfFHR5F-14" value="Saídas&lt;br&gt;Protegidas por mutex&lt;br&gt;OUT_1&lt;br&gt;OUT_2&lt;br&gt;OUT_3&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;OUT_4" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="351" y="270" width="139" height="140" as="geometry" />
-        </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-15" value="Escolhe entrada 4" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="354" y="420" width="120" height="60" as="geometry" />
+          <mxGeometry x="1270" y="330" width="139" height="140" as="geometry" />
         </mxCell>
         <mxCell id="xhrllQ4y0iZZigfFHR5F-16" value="Task IHM&lt;br&gt;Leitura dos BTN&lt;br&gt;Envia o sinal pro Display" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
           <mxGeometry x="80" y="90" width="160" height="160" as="geometry" />
@@ -60,6 +30,12 @@
         </mxCell>
         <mxCell id="xhrllQ4y0iZZigfFHR5F-22" value="Task Lógica 4&lt;br&gt;Pega o valor da entradas selecionada&lt;br&gt;Faz uma ou duas lógicas&lt;br&gt;Joga o sinal pra saída selecionada" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
           <mxGeometry x="1110" y="85" width="170" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-23" value="Entradas&lt;br&gt;IN_1&lt;br&gt;IN_2&lt;br&gt;IN_3&lt;br&gt;IN_4&lt;br&gt;A_0" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-190" y="250" width="139" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-24" value="Configurações&lt;br&gt;Protegida por mutex&lt;br&gt;LOGICA_1&lt;br&gt;LOGICA_2&lt;br&gt;LOGICA_3&lt;br&gt;LOGICA_4" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-190" y="400" width="139" height="140" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
