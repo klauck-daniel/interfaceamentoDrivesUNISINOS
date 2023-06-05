@@ -1,0 +1,34 @@
+O objetivo do trabalho GB, é realizar uma implementação usando os conceitos de multiprogramação embarcada.
+
+Para tanto deverá ser implementado utilizando um Sistema Operacional do Tempo Real e um dos kit de microcontroladores  da  atividade,  além de  montagens de hardware  para demonstrar o funcionamento do protótipo. (Montagens de hardware bem organizadas contabilizam um acréscimo na avaliação final)
+
+O escopo da implementação é desenvolver um pequeno controlador lógico programável (PLC) que permita o desenvolvimento das lógicas de controle através da própria IHM  que deverá ser implementada com display e botões de ajuste e seleção.  Figura abaixo ilustra um exemplo de interface exibindo a programação de blocos
+
+
+Requisitos Mínimos:
+
+- Interface amigável com o usuário ( botões de controle, display)
+
+- Uso de um  dos protocolos de comunicação  estudados  durante o GA
+
+- O PLC deverá ter 4 entradas digitais, 4 saídas digitais e uma entrada analógica.
+
+- Suportar as seguintes lógicas E, OU, NÃO, Delay e Threshold (limite de sinal analógico)
+
+- Permitir criar até 4  grupos de lógicas de controle usando qualquer uma das entradas (máximo 2), inclusive entradas já utilizadas. Esses grupos de lógicas de controle deverão acionar somente uma porta de saída por grupo, não podendo ser uma porta que já foi utilizada.
+
+- Cada grupo de lógica de controle deverá suportar até 2 elementos de lógica  de forma serial ( Entrada -> logica1-> logica2-> Saída)
+
+- Observar o uso  de  proteção para regiões críticas ou queues.
+
+- Observar o uso de prioridades.
+
+Etapas do trabalho
+
+Etapa 1: - Entrega da especificação do trabalho, onde conste  o estudo para o particionamento das tasks do sistema,  as área de memória compartilhada e  o fluxograma  do código. (Peso 30%)
+
+Etapa 2: - Implementação do protótipo e teste (Peso 30%)
+
+Etapa 3: - Apresentação para a turma da especificação e metodologias de implementação (PPT)  e  do protótipo funcionando (Peso 40%)
+
+O trabalho deverá ser desenvolvido em grupos de 2 alunos.
