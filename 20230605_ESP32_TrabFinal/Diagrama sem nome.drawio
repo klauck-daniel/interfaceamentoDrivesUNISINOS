@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-06-05T23:39:45.775Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="CZ24JC640zzvNg9i3PS9" version="21.3.5" type="github">
+<mxfile host="app.diagrams.net" modified="2023-06-05T23:44:11.834Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="h9-vajxDJIR-DSbrEH7f" version="21.3.5" type="github">
   <diagram name="Página-1" id="CQQQ1_xxynBM_lZkvn02">
     <mxGraphModel dx="1434" dy="792" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -46,11 +46,20 @@
         <mxCell id="xhrllQ4y0iZZigfFHR5F-15" value="Escolhe entrada 4" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="354" y="420" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-16" value="Task IHM&lt;br&gt;Leitura dos BTN" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
-          <mxGeometry x="50" y="70" width="130" height="130" as="geometry" />
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-16" value="Task IHM&lt;br&gt;Leitura dos BTN&lt;br&gt;Envia o sinal pro Display" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="80" y="90" width="160" height="160" as="geometry" />
         </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-19" value="Task Lógica 1&lt;br&gt;" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
-          <mxGeometry x="220" y="70" width="130" height="130" as="geometry" />
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-19" value="Task Lógica 1&lt;br&gt;Pega o valor da entradas selecionada&lt;br&gt;Faz uma ou duas lógicas&lt;br&gt;Joga o sinal pra saída selecionada" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="329" y="80" width="170" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-20" value="Task Lógica 2&lt;br&gt;Pega o valor da entradas selecionada&lt;br&gt;Faz uma ou duas lógicas&lt;br&gt;Joga o sinal pra saída selecionada" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="600" y="90" width="170" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-21" value="Task Lógica 3&lt;br&gt;Pega o valor da entradas selecionada&lt;br&gt;Faz uma ou duas lógicas&lt;br&gt;Joga o sinal pra saída selecionada" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="850" y="85" width="170" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-22" value="Task Lógica 4&lt;br&gt;Pega o valor da entradas selecionada&lt;br&gt;Faz uma ou duas lógicas&lt;br&gt;Joga o sinal pra saída selecionada" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="85" width="170" height="170" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
