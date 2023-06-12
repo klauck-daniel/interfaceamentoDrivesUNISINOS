@@ -10,20 +10,23 @@
 
 //============================================================
 // --- Mapeamento de Hardware ---
-#define bt_pp GPIO_NUM_21
-#define bt_mm GPIO_NUM_22
-#define bt_ok GPIO_NUM_23
+#define bt_pp GPIO_NUM_12
+#define bt_mm GPIO_NUM_14
+#define bt_ok GPIO_NUM_27
 
-#define in_01 GPIO_NUM_12
-#define in_02 GPIO_NUM_16
-#define in_03 GPIO_NUM_14
-#define in_04 GPIO_NUM_27
+#define in_01 GPIO_NUM_35
+#define in_02 GPIO_NUM_34
+#define in_03 GPIO_NUM_15
+#define in_04 GPIO_NUM_4
 #define a_in_04 GPIO_NUM_13
 
 #define out_01 GPIO_NUM_26
 #define out_02 GPIO_NUM_25
-#define out_03 GPIO_NUM_35
-#define out_04 GPIO_NUM_34
+#define out_03 GPIO_NUM_33
+#define out_04 GPIO_NUM_32
+
+#define OLED GPIO_NUM_21 //definir corretamente
+#define OLED GPIO_NUM_22 //definir corretamente
 
 volatile int hora = 0;
 volatile int minuto = 0;
