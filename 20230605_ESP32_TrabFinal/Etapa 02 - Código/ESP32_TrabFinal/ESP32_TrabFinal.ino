@@ -245,6 +245,17 @@ void setup()
   pinMode(bt_mm, INPUT_PULLUP);                                                       
   pinMode(bt_ok, INPUT_PULLUP);                                               
 
+  pinMode(in_01, INPUT_PULLUP);
+  pinMode(in_02, INPUT_PULLUP);  
+  pinMode(in_03, INPUT_PULLUP);  
+  pinMode(in_04, INPUT_PULLUP);
+  pinMode(a_in_04, INPUT);
+
+  pinMode(out_01, OUTPUT);
+  pinMode(out_02, OUTPUT);  
+  pinMode(out_03, OUTPUT);  
+  pinMode(out_04, OUTPUT);
+  
   Serial.begin(115200);
   delay(1000);
 
