@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-06-12T23:40:24.274Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43" etag="zz50avc0pjl52jyTLjGd" version="21.3.8" type="github">
+<mxfile host="app.diagrams.net" modified="2023-06-12T23:41:07.044Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43" etag="ayjQ8g0W19_NvUfCn0iP" version="21.3.8" type="github">
   <diagram name="Página-1" id="CQQQ1_xxynBM_lZkvn02">
     <mxGraphModel dx="2487" dy="955" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -153,16 +153,16 @@
         <mxCell id="xhrllQ4y0iZZigfFHR5F-55" value="FILA 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="780" y="320" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-56" value="MUTEX_3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-56" value="FILA 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="680" y="540" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-57" value="MUTEX_3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-57" value="FILA 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="780" y="540" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-58" value="MUTEX_4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-58" value="FILA 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="680" y="772" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="xhrllQ4y0iZZigfFHR5F-59" value="MUTEX_4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="xhrllQ4y0iZZigfFHR5F-59" value="FILA 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="780" y="773" width="60" height="30" as="geometry" />
         </mxCell>
         <mxCell id="xhrllQ4y0iZZigfFHR5F-60" value="Display&lt;br&gt;Exibe legenda dos BTNs (+, -, OK)&lt;br&gt;Exibe configuração que está sendo setada (task, in_1, in_2, op_1, op_2, out)" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
