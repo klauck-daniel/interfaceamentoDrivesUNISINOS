@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-06-12T23:41:07.044Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43" etag="ayjQ8g0W19_NvUfCn0iP" version="21.3.8" type="github">
+<mxfile host="app.diagrams.net" modified="2023-06-13T00:24:19.594Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43" etag="MV_krn5JNpFp3tIFjR2E" version="21.3.8" type="github">
   <diagram name="Página-1" id="CQQQ1_xxynBM_lZkvn02">
     <mxGraphModel dx="2487" dy="955" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -35,7 +35,7 @@
           <mxGeometry x="860" y="722" width="170" height="170" as="geometry" />
         </mxCell>
         <mxCell id="xhrllQ4y0iZZigfFHR5F-23" value="Entradas&lt;br&gt;IN_1&lt;br&gt;IN_2&lt;br&gt;IN_3&lt;br&gt;IN_4&lt;br&gt;A_0" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="1280" y="397.5" width="139" height="140" as="geometry" />
+          <mxGeometry x="1280" y="400" width="139" height="140" as="geometry" />
         </mxCell>
         <mxCell id="xhrllQ4y0iZZigfFHR5F-24" value="ESCOLHA_TASK&amp;nbsp;1&lt;br&gt;Protegida por mutex&lt;br&gt;CONFIG_IN_1&lt;br&gt;CONFIG_IN_2&lt;br&gt;CONFIG_OP_1&lt;br&gt;CONFIG_OP_2&lt;br&gt;CONFIG_OUT = 1" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="520" y="75" width="139" height="140" as="geometry" />
