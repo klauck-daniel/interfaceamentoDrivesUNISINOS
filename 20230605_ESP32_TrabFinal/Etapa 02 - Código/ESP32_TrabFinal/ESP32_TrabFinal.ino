@@ -44,10 +44,12 @@ QueueHandle_t integerQueue1,
 #define out_04 GPIO_NUM_32
 //==========================================================================
 
-volatile int  aux_volat_IN1_task1 = 0,
-              aux_volat_IN2_task1 = 0,
-              aux_volat_IN3_task1 = 0,
-              aux_volat_IN4_task1 = 0;
+volatile int    aux_volat_IN1_task1 = 0,
+                aux_volat_IN2_task1 = 0,
+                aux_volat_IN3_task1 = 0,
+                aux_volat_IN4_task1 = 0;
+
+volatile float  aux_volat_a0_task1 = 0;
 
 int   menu_number           = 1,
       menu_operacoes        = 1,
@@ -78,11 +80,27 @@ SemaphoreHandle_t xMutex1;
 SemaphoreHandle_t xMutex2;
 SemaphoreHandle_t xMutex3;
 SemaphoreHandle_t xMutex4;
+SemaphoreHandle_t xMutex5;
 
 void task_ihm_btn_display(void*parametro)
 {
   while(1)
-  {  
+  { 
+      int valor_analogica;
+
+      // --- Variáveis para ajuste no valor do tempo --- =============================== 
+      const int valorMinimo = 0;
+      const int valorMaximo = 4095;
+      const int valorMinimoMapeado = 0;
+      const int valorMaximoMapeado = 15;
+
+      // --- Variável para ajuste no valor do Threshold --- =============================== 
+      const int valor_minimo_threshold = 0.0;
+      const int valor_maximo_threshold = 4095;
+      const int valor_minimo_map_threshold = 500;
+      const int valor_maximo_map_threshold = 3300;
+
+      // --- Variáveis --- ===============================
       int Max_itens_menu            = 5,
           max_task_logica           = 4,
           max_escolha_entradas      = 5,
@@ -220,7 +238,7 @@ void task_ihm_btn_display(void*parametro)
     switch(menu_number)
     {
       case 1:
-              Serial.println("Escolha Tarefa");
+              Serial.print("Escolha Tarefa: ");
               Serial.println(aux_task_escolhida);
               aux_escolha_task = 1;
               aux_escolha_IN1 = 0;
@@ -229,8 +247,7 @@ void task_ihm_btn_display(void*parametro)
               aux_escolha_OP2 = 0;                                
               break;
       case 2:
-              Serial.println("Config_IN1");
-              Serial.println(aux_IN1_escolhida);
+              Serial.print("Config_IN1: ");
               menu_entradas = aux_IN1_escolhida;
               aux_escolha_task = 0;
               aux_escolha_IN1 = 1;
@@ -239,8 +256,7 @@ void task_ihm_btn_display(void*parametro)
               aux_escolha_OP2 = 0;                                                     
               break;
       case 3:
-              Serial.println("Config_IN2");
-              Serial.println(aux_IN2_escolhida);
+              Serial.print("Config_IN2: ");
               menu_entradas = aux_IN2_escolhida;
               aux_escolha_task = 0;
               aux_escolha_IN1 = 0;
@@ -249,8 +265,7 @@ void task_ihm_btn_display(void*parametro)
               aux_escolha_OP2 = 0;                                                      
               break;
       case 4:
-              Serial.println("Config_OP1");
-              Serial.println(aux_OP1_escolhida);
+              Serial.print("Config_OP1: ");
               menu_operacoes = aux_OP1_escolhida;
               aux_escolha_task = 0;
               aux_escolha_IN1 = 0;
@@ -259,8 +274,7 @@ void task_ihm_btn_display(void*parametro)
               aux_escolha_OP2 = 0;                                                      
               break;
       case 5:
-              Serial.println("Config_OP2");
-              Serial.println(aux_OP2_escolhida);
+              Serial.print("Config_OP2: ");
               menu_operacoes = aux_OP2_escolhida;
               aux_escolha_task = 0;
               aux_escolha_IN1 = 0;
@@ -322,6 +336,32 @@ void task_ihm_btn_display(void*parametro)
       }
     // =====================================================================
 
+    // --- Ajusta tempo ---
+    if(menu_operacoes == 5)
+    {
+    int valor = analogRead(a_in_04);
+    int valor_tempo = map(valor, valorMinimo, valorMaximo, valorMinimoMapeado, valorMaximoMapeado);
+    }
+
+    // --- Ajusta Threshold ---
+    if(menu_operacoes == 6)
+    {
+    int valor_Threshold = analogRead(a_in_04);
+    float valor_Map_threshold = map(valor_Threshold, valor_minimo_threshold, valor_maximo_threshold, valor_minimo_map_threshold, valor_maximo_map_threshold) / 1000.0;
+
+    }
+
+
+    /*//Variável para a fila 1 se "aux_task_escolhida == 1"
+    //  -aux_IN1_escolhida
+        -aux_IN2_escolhida
+        -aux_OP1_escolhida
+        -aux_OP2_escolhida
+        -valor_tempo
+        -valor_Map_threshold
+
+    */
+    //xQueueSendToBack(integerQueue1, &valor_Map_threshold, 0);
 
     xSemaphoreTake(xMutex1,portMAX_DELAY);
 
@@ -359,7 +399,10 @@ void task_ihm_btn_display(void*parametro)
       else
         {
           aux_volat_IN4_task1 = 0;
-        }                         
+        }
+
+    valor_analogica = analogRead(a_in_04);
+    aux_volat_a0_task1 = ((valor_analogica/4095.0)*3.3);
     
     xSemaphoreGive(xMutex1);
 
@@ -371,6 +414,12 @@ void task_logica1(void*parametro)
 {  
   while(1)
   {
+    /*int receiveValue;
+    if(xQueueReceive(integerQueue1, &receiveValue, portMAX_DELAY))
+    {
+      Serial.print(receiveValue);
+    }*/
+
     xSemaphoreTake(xMutex1,portMAX_DELAY);
 
     //Teste leitura entrada IN1 pela task
@@ -411,6 +460,7 @@ void setup()
   xMutex2 = xSemaphoreCreateMutex();
   xMutex3 = xSemaphoreCreateMutex();
   xMutex4 = xSemaphoreCreateMutex();
+  xMutex5 = xSemaphoreCreateMutex();
 
 // --- Criação das filas ---================================================
   integerQueue1 = xQueueCreate(10, // Queue length
