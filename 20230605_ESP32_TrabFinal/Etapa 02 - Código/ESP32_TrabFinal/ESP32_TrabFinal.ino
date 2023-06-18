@@ -35,7 +35,7 @@ QueueHandle_t integerQueue1,
 #define in_04 GPIO_NUM_4
 
 // --- Define entrada analógica do PLC ---
-#define a_in_04 GPIO_NUM_13
+#define a_in_01 GPIO_NUM_13
 
 // --- Define saídas digitais do PLC ---
 #define out_01 GPIO_NUM_26
@@ -63,7 +63,9 @@ int   menu_number           = 1,
       aux_escolha_OP1       = 1,
       aux_OP1_escolhida     = 1,
       aux_escolha_OP2       = 1,
-      aux_OP2_escolhida     = 1;
+      aux_OP2_escolhida     = 1,
+      aux_confirma          = 1,
+      aux_escolha_OK        = 1;
 
 bool  aux_bt_pp             = 0,
       aux_bt_mm             = 0,
@@ -101,10 +103,10 @@ void task_ihm_btn_display(void*parametro)
       const int valor_maximo_map_threshold = 3300;
 
       // --- Variáveis --- ===============================
-      int Max_itens_menu            = 5,
+      int Max_itens_menu            = 6,
           max_task_logica           = 4,
-          max_escolha_entradas      = 5,
-          max_escolha_operacoes     = 6,
+          max_escolha_entradas      = 6,
+          max_escolha_operacoes     = 5,
           min_task_logica           = 1,
           min_escolha_entradas      = 1,
           min_escolha_operacoes     = 1;
@@ -224,27 +226,38 @@ void task_ihm_btn_display(void*parametro)
       if(!digitalRead(bt_ok))  aux_bt_ok  = 1;                             
       if(digitalRead(bt_ok) && aux_bt_ok)                                  
       {
+       
         aux_bt_ok = 0;
+        
           if(!aux_bt_ok)
           menu_number ++;
           if(menu_number > Max_itens_menu)  
           menu_number = 1;
-          delay(150);                                                                             
+          delay(150);
+          
+          if(aux_escolha_OK == 1){
+            
+                Serial.println("ENVIA DADOS ");
+                delay(5000);  
+            
+          }                                                                             
       }
+      
 
       Serial.println("+...-...ok ");
+      Serial.printf("CONFIORMA: %d \n", aux_confirma);
 
     // --- Mostra o menu --- ===============================================
     switch(menu_number)
     {
       case 1:
-              Serial.print("Escolha Tarefa: ");
-              Serial.println(aux_task_escolhida);
+              Serial.printf("Escolha Tarefa: %d \n", aux_task_escolhida);
               aux_escolha_task = 1;
               aux_escolha_IN1 = 0;
               aux_escolha_IN2 = 0;
               aux_escolha_OP1 = 0;
-              aux_escolha_OP2 = 0;                                
+              aux_escolha_OP2 = 0;
+              aux_escolha_OK = 0;                                 
               break;
       case 2:
               Serial.print("Config_IN1: ");
@@ -253,7 +266,8 @@ void task_ihm_btn_display(void*parametro)
               aux_escolha_IN1 = 1;
               aux_escolha_IN2 = 0;
               aux_escolha_OP1 = 0; 
-              aux_escolha_OP2 = 0;                                                     
+              aux_escolha_OP2 = 0;
+              aux_escolha_OK = 0;                                                      
               break;
       case 3:
               Serial.print("Config_IN2: ");
@@ -262,7 +276,8 @@ void task_ihm_btn_display(void*parametro)
               aux_escolha_IN1 = 0;
               aux_escolha_IN2 = 1;
               aux_escolha_OP1 = 0; 
-              aux_escolha_OP2 = 0;                                                      
+              aux_escolha_OP2 = 0;
+              aux_escolha_OK = 0;                                                       
               break;
       case 4:
               Serial.print("Config_OP1: ");
@@ -271,7 +286,8 @@ void task_ihm_btn_display(void*parametro)
               aux_escolha_IN1 = 0;
               aux_escolha_IN2 = 0;
               aux_escolha_OP1 = 1; 
-              aux_escolha_OP2 = 0;                                                      
+              aux_escolha_OP2 = 0;
+              aux_escolha_OK = 0;                                                       
               break;
       case 5:
               Serial.print("Config_OP2: ");
@@ -280,7 +296,18 @@ void task_ihm_btn_display(void*parametro)
               aux_escolha_IN1 = 0;
               aux_escolha_IN2 = 0;
               aux_escolha_OP1 = 0; 
-              aux_escolha_OP2 = 1;                                                      
+              aux_escolha_OP2 = 1;
+              aux_escolha_OK = 0;                                                      
+              break;
+    case 6:
+              Serial.print("Pressione OK para enviar a lógica.");
+              menu_operacoes = 0;
+              aux_escolha_task = 0;
+              aux_escolha_IN1 = 0;
+              aux_escolha_IN2 = 0;
+              aux_escolha_OP1 = 0; 
+              aux_escolha_OP2 = 0;
+              aux_escolha_OK = 1;                                                      
               break;
     }
     // =====================================================================
@@ -304,6 +331,9 @@ void task_ihm_btn_display(void*parametro)
                   break;
           case 5:
                   Serial.println("IN4");                                                      
+                  break;
+          case 6:
+                  Serial.println("ANALOG_IN1");
                   break;
         }
       }
@@ -329,24 +359,21 @@ void task_ihm_btn_display(void*parametro)
           case 5:
                   Serial.println("DELAY");                                                      
                   break;
-          case 6:
-                  Serial.println("THRESHOLD");                                                      
-                  break;
         }
       }
     // =====================================================================
 
-    // --- Ajusta tempo ---
+    // --- Ajusta tempo de delay---
     if(menu_operacoes == 5)
     {
-    int valor = analogRead(a_in_04);
+    int valor = analogRead(a_in_01);
     int valor_tempo = map(valor, valorMinimo, valorMaximo, valorMinimoMapeado, valorMaximoMapeado);
     }
 
     // --- Ajusta Threshold ---
-    if(menu_operacoes == 6)
+    if(menu_entradas == 6)
     {
-    int valor_Threshold = analogRead(a_in_04);
+    int valor_Threshold = analogRead(a_in_01);
     float valor_Map_threshold = map(valor_Threshold, valor_minimo_threshold, valor_maximo_threshold, valor_minimo_map_threshold, valor_maximo_map_threshold) / 1000.0;
 
     }
@@ -401,7 +428,7 @@ void task_ihm_btn_display(void*parametro)
           aux_volat_IN4_task1 = 0;
         }
 
-    valor_analogica = analogRead(a_in_04);
+    valor_analogica = analogRead(a_in_01);
     aux_volat_a0_task1 = ((valor_analogica/4095.0)*3.3);
     
     xSemaphoreGive(xMutex1);
@@ -446,7 +473,7 @@ void setup()
   pinMode(in_02, INPUT_PULLUP);  
   pinMode(in_03, INPUT_PULLUP);  
   pinMode(in_04, INPUT_PULLUP);
-  pinMode(a_in_04, INPUT);
+  pinMode(a_in_01, INPUT);
 
   pinMode(out_01, OUTPUT);
   pinMode(out_02, OUTPUT);  
