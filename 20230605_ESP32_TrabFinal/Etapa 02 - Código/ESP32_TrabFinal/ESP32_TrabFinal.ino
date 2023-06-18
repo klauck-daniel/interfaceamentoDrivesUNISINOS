@@ -44,18 +44,6 @@ QueueHandle_t integerQueue1,
 #define out_04 GPIO_NUM_32
 //==========================================================================
 
-// --- Defines do Display ---
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 32 // OLED display height, in pixels
-// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-#define OLED_RESET -1 // Reset pin # (or -1 if sharing Arduino reset pin)
-#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
-
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-
-int aux_conta = 0;
-int filaIndex = 0;
-
 volatile int    aux_volat_IN1_task1 = 0,
                 aux_volat_IN2_task1 = 0,
                 aux_volat_IN3_task1 = 0,
@@ -88,46 +76,20 @@ int aux_conta               = 0,
 
 float threshold_Valor       = 0.0;
 
-
-bool aux_bt_pp     = 0,
-     aux_bt_mm     = 0,
-     aux_bt_ok     = 0;
-
-
 TickType_t xTimeBefore, xTotalTimeSuspended;
 
 SemaphoreHandle_t xMutex1;
 SemaphoreHandle_t xMutex2;
 SemaphoreHandle_t xMutex3;
 SemaphoreHandle_t xMutex4;
-
 SemaphoreHandle_t xMutex5;
 
 void task_ihm_btn_display(void*parametro)
-
 {
   while(1)
-
-  {
-    xSemaphoreTake(xMutex1, portMAX_DELAY);
-
-    int valor_bt_pp = 0;
-    int valor_bt_mm = 0;
-    int valor_bt_ok = 0;
-  
-
-      if(!digitalRead(bt_pp))  aux_bt_pp  = 1;                           
-      if(digitalRead(bt_pp) && aux_bt_pp)                                  
-      {
-        aux_bt_pp = 0;
-        valor_bt_pp ++;
-        display.setTextSize(1);
-  display.setCursor(0, 0);
-  display.println(" -- .... ++ .... OK");
-  display.display();                                                                               
-
   { 
-      int valor_analogica;
+      int valor_analogica,
+          enviando_valores;
 
       // --- Variáveis para ajuste no valor do tempo --- =============================== 
       const int valorMinimo = 0;
@@ -204,7 +166,6 @@ void task_ihm_btn_display(void*parametro)
               aux_OP2_escolhida = max_escolha_operacoes;
             }
           // ===============================================================                                                 
-
       }
 
       if(!digitalRead(bt_mm))  aux_bt_mm  = 1;                             
@@ -278,71 +239,14 @@ void task_ihm_btn_display(void*parametro)
           if(aux_escolha_OK == 1){
             
                 Serial.println("ENVIA DADOS ");
-                delay(5000);  
+                enviando_valores = 1;
+                delay(500);  
             
           }                                                                             
       }
-  
-
- // display.setTextSize(1);
-  //display.setCursor(1,0);
-  //display.println(valor_bt_pp);
-  //display.display();
-
-    xSemaphoreGive(xMutex1);
-    delay(500);
-  }
-}
-
-void task_logica_1(void*parametro)
-
-{
-  while(1)
-  {
-    xSemaphoreTake(xMutex1,portMAX_DELAY);
-
-      if(!digitalRead(in_01))  aux_bt_pp  = 1;                             
-      if(digitalRead(in_01) && aux_bt_pp)                                  
-      {
-        aux_bt_pp = 0;                                                                             
-      }
-    
-    xSemaphoreGive(xMutex1);
-
-      if(!digitalRead(in_02))  aux_bt_mm  = 1;                             
-      if(digitalRead(in_02) && aux_bt_mm)                                  
-
-      if(!digitalRead(bt_pp))  aux_bt_pp  = 1;                             
-      if(digitalRead(bt_pp) && aux_bt_pp)                                  
-      {
-        aux_bt_pp = 0;                                                                             
-      }
-
-      if(!digitalRead(bt_mm))  aux_bt_mm  = 1;                             
-      if(digitalRead(bt_mm) && aux_bt_mm)                                  
-
-      {
-        aux_bt_mm = 0;                                                                              
-      }
-
-      if(!digitalRead(in_03))  aux_bt_ok  = 1;                             
-      if(digitalRead(in_03) && aux_bt_ok)                                  
-      {
-        aux_bt_ok = 0;                                                                              
-      }
-
-      if(!digitalRead(bt_ok))  aux_bt_ok  = 1;                             
-      if(digitalRead(bt_ok) && aux_bt_ok)                                  
-      {
-        aux_bt_ok = 0;                                                                              
-      }
-
-    String var = ":";
-    Serial.print("+...-...ok "); 
-    Serial.println("");
+      
 
       Serial.println("+...-...ok ");
-      Serial.printf("CONFIORMA: %d \n", aux_confirma);
 
     // --- Mostra o menu --- ===============================================
     switch(menu_number)
@@ -472,6 +376,7 @@ void task_logica_1(void*parametro)
     {
     int valor_Threshold = analogRead(a_in_01);
     float valor_Map_threshold = map(valor_Threshold, valor_minimo_threshold, valor_maximo_threshold, valor_minimo_map_threshold, valor_maximo_map_threshold) / 1000.0;
+
     }
 
 
@@ -485,8 +390,52 @@ void task_logica_1(void*parametro)
 
     */
     //xQueueSendToBack(integerQueue1, &valor_Map_threshold, 0);
+    if(enviando_valores)
+    {
+      int tamanho_fila = 4;
+      int valores[] = {aux_IN1_escolhida, aux_IN2_escolhida, aux_OP1_escolhida, aux_OP2_escolhida};
+
+      for (int i = 0; i < tamanho_fila; i++) 
+      {
+        if(aux_task_escolhida == 1)
+        {
+          xQueueSend(integerQueue1, &valores[i], portMAX_DELAY);
+          vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
+        }
+
+        if(aux_task_escolhida == 2)
+        {
+          xQueueSend(integerQueue2, &valores[i], portMAX_DELAY);
+          vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
+        }
+
+        if(aux_task_escolhida == 3)
+        {
+          xQueueSend(integerQueue3, &valores[i], portMAX_DELAY);
+          vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
+        }
+
+        if(aux_task_escolhida == 4)
+        {
+          xQueueSend(integerQueue4, &valores[i], portMAX_DELAY);
+          vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
+        }
+      }
+      // --- Encerra o envio dos dados --- ==============================================
+      enviando_valores      = 0;
+      //=================================================================================
+
+      // --- Retorna a configuração original para a lógica --- ==========================
+      aux_task_escolhida    = 1;
+      aux_IN1_escolhida     = 1;
+      aux_IN2_escolhida     = 1;
+      aux_OP1_escolhida     = 1;
+      aux_OP2_escolhida     = 1;
+      //=================================================================================
+    }
 
     xSemaphoreTake(xMutex1,portMAX_DELAY);
+Serial.println(aux_volat_IN1_task1);
     if(digitalRead(in_01))
       {
         aux_volat_IN1_task1 = 1;
@@ -495,9 +444,7 @@ void task_logica_1(void*parametro)
         {
           aux_volat_IN1_task1 = 0;
         }
-    xSemaphoreGive(xMutex1);
 
-    xSemaphoreTake(xMutex2,portMAX_DELAY);
     if(digitalRead(in_02))
       {
         aux_volat_IN2_task1 = 1;
@@ -506,9 +453,7 @@ void task_logica_1(void*parametro)
         {
           aux_volat_IN2_task1 = 0;
         }
-    xSemaphoreGive(xMutex2);
 
-    xSemaphoreTake(xMutex3,portMAX_DELAY);
     if(digitalRead(in_03))
       {
         aux_volat_IN3_task1 = 1;
@@ -517,9 +462,7 @@ void task_logica_1(void*parametro)
         {
           aux_volat_IN3_task1 = 0;
         }
-    xSemaphoreGive(xMutex3);
 
-    xSemaphoreTake(xMutex4,portMAX_DELAY);
     if(digitalRead(in_04))
       {
         aux_volat_IN4_task1 = 1;
@@ -528,13 +471,12 @@ void task_logica_1(void*parametro)
         {
           aux_volat_IN4_task1 = 0;
         }
-    xSemaphoreGive(xMutex4);
 
-    xSemaphoreTake(xMutex5,portMAX_DELAY);
     valor_analogica = analogRead(a_in_01);
     aux_volat_a0_task1 = ((valor_analogica/4095.0)*3.3);
-    xSemaphoreGive(xMutex5);
     
+    xSemaphoreGive(xMutex1);
+
     delay(500);
   }
 }
@@ -543,12 +485,32 @@ void task_logica1(void*parametro)
 {  
   while(1)
   {
-    //recebe parametros da fila
     /*int receiveValue;
     if(xQueueReceive(integerQueue1, &receiveValue, portMAX_DELAY))
     {
       Serial.print(receiveValue);
+      if(receiveValue)
     }*/
+
+    int valorRecebido,
+        aux1,
+        aux2,
+        aux3,
+        aux4;
+
+    int tamanho_fila = 4;
+    int valor1 = 0;
+    int valores_recebidos[] = {aux1, aux2, aux3, aux4};
+    for (int i = 0; i < tamanho_fila; i++)
+    {
+      if (xQueueReceive(integerQueue1, &valorRecebido, portMAX_DELAY)) 
+      {
+        valores_recebidos[i] = valorRecebido;
+            // Processar o valor recebido
+            printf("Valor recebido: %d\n", valorRecebido);
+      }
+    }
+    valor1 = valores_recebidos[1];
 
     xSemaphoreTake(xMutex1,portMAX_DELAY);
 
@@ -556,25 +518,58 @@ void task_logica1(void*parametro)
     if(aux_volat_IN1_task1)
       {
         Serial.println("Mutex");
+        //Serial.println(valor1);
       }                         
-
-    String var = ":";
-    Serial.print("Cronometro "); 
-    Serial.print(h + var + m + var + s);
-    Serial.println("");
-
-    Serial.print("parcial 1 ");
-    Serial.print(parcial1_h + var + parcial1_m + var + parcial1_s);
-    Serial.println("");
-
-    Serial.print("parcial 2 ");
-    Serial.print(parcial2_h + var + parcial2_m + var + parcial2_s);
-    Serial.println("");
-    Serial.println("");
-
-    xSemaphoreGive(xMutex2);
-
+    
     xSemaphoreGive(xMutex1);
+
+    delay(500);
+  }
+}
+
+void task_logica2(void*parametro)
+{  
+  while(1)
+  {
+    
+    int valorRecebido;
+    if (xQueueReceive(integerQueue2, &valorRecebido, portMAX_DELAY)) {
+            // Processar o valor recebido
+            printf("Valor recebido: %d\n", valorRecebido);
+        }
+   
+
+    delay(500);
+  }
+}
+
+void task_logica3(void*parametro)
+{  
+  while(1)
+  {
+    
+    int valorRecebido;
+    if (xQueueReceive(integerQueue3, &valorRecebido, portMAX_DELAY)) {
+            // Processar o valor recebido
+            printf("Valor recebido: %d\n", valorRecebido);
+        }
+   
+
+    delay(500);
+  }
+}
+
+void task_logica4(void*parametro)
+{  
+  while(1)
+  {
+    
+    int valorRecebido;
+    if (xQueueReceive(integerQueue4, &valorRecebido, portMAX_DELAY)) {
+            // Processar o valor recebido
+            printf("Valor recebido: %d\n", valorRecebido);
+        }
+   
 
     delay(500);
   }
@@ -586,18 +581,7 @@ void setup()
 //==========================================================================
   pinMode(bt_pp, INPUT_PULLUP);                                                       
   pinMode(bt_mm, INPUT_PULLUP);                                                       
-  pinMode(bt_ok, INPUT_PULLUP);
-
-  pinMode(in_01, INPUT_PULLUP);
-  pinMode(in_02, INPUT_PULLUP);  
-  pinMode(in_03, INPUT_PULLUP);  
-  pinMode(in_04, INPUT_PULLUP);
-  pinMode(a_in_04, INPUT);
-
-  pinMode(out_01, OUTPUT);
-  pinMode(out_02, OUTPUT);  
-  pinMode(out_03, OUTPUT);  
-  pinMode(out_04, OUTPUT);
+  pinMode(bt_ok, INPUT_PULLUP);                                               
 
   pinMode(in_01, INPUT_PULLUP);
   pinMode(in_02, INPUT_PULLUP);  
@@ -617,15 +601,6 @@ void setup()
   xMutex2 = xSemaphoreCreateMutex();
   xMutex3 = xSemaphoreCreateMutex();
   xMutex4 = xSemaphoreCreateMutex();
-
-//inicializa o display
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;);
-  }
-  delay(2000);
-  display.clearDisplay();
-
   xMutex5 = xSemaphoreCreateMutex();
 
 // --- Criação das filas ---================================================
@@ -643,7 +618,7 @@ void setup()
                               );
 //==========================================================================
 
-  //Cria tarefa 1
+  // --- Cria tarefa 1 - Tarefa display e leitura de botões --- ============
   xTaskCreatePinnedToCore(
               task_ihm_btn_display,   //Tarefa
               "task_ihm_btn_display", //Nome da tarefa
@@ -653,21 +628,9 @@ void setup()
               NULL,
               0        //Identificador da tarefa
               );
+//==========================================================================
 
-
-  //Cria tarefa 2
-  xTaskCreatePinnedToCore(
-              task_logica_1,   //Tarefa
-              "task_logica_1", //Nome da tarefa
-              10000,      //Tamanho da pilha
-              NULL,       //Parâmetro de entrada não passa nada
-              3,          //Prioridade
-              NULL,
-              0        //Identificador da tarefa
-              );
-
-
-  //Cria tarefa 2
+  // --- Cria tarefa 1 - Tarefa da lógica 1 --- ============================
   xTaskCreatePinnedToCore(
               task_logica1,   //Tarefa
               "task_logica1", //Nome da tarefa
@@ -677,13 +640,47 @@ void setup()
               NULL,
               0        //Identificador da tarefa
               );
-
+//==========================================================================
   
+  // --- Cria tarefa 2 - Tarefa da lógica 2 --- ============================
+  xTaskCreatePinnedToCore(
+              task_logica2,   //Tarefa
+              "task_logica2", //Nome da tarefa
+              10000,      //Tamanho da pilha
+              NULL,       //Parâmetro de entrada não passa nada
+              5,          //Prioridade
+              NULL,
+              0        //Identificador da tarefa
+              );
+//==========================================================================
+
+  // --- Cria tarefa 3 - Tarefa da lógica 3 --- ============================
+  xTaskCreatePinnedToCore(
+              task_logica3,   //Tarefa
+              "task_logica3", //Nome da tarefa
+              10000,      //Tamanho da pilha
+              NULL,       //Parâmetro de entrada não passa nada
+              5,          //Prioridade
+              NULL,
+              0        //Identificador da tarefa
+              );
+//==========================================================================
+  
+  // --- Cria tarefa 4 - Tarefa da lógica 4 --- ============================
+  xTaskCreatePinnedToCore(
+              task_logica4,   //Tarefa
+              "task_logica4", //Nome da tarefa
+              10000,      //Tamanho da pilha
+              NULL,       //Parâmetro de entrada não passa nada
+              5,          //Prioridade
+              NULL,
+              0        //Identificador da tarefa
+              );
+  //==========================================================================
+
 }
 
 // the loop function runs over and over again forever
 void loop() 
 { 
-
 }
-  }
