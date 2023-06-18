@@ -375,7 +375,6 @@ void task_ihm_btn_display(void*parametro)
     {
     int valor_Threshold = analogRead(a_in_01);
     float valor_Map_threshold = map(valor_Threshold, valor_minimo_threshold, valor_maximo_threshold, valor_minimo_map_threshold, valor_maximo_map_threshold) / 1000.0;
-
     }
 
 
@@ -391,7 +390,6 @@ void task_ihm_btn_display(void*parametro)
     //xQueueSendToBack(integerQueue1, &valor_Map_threshold, 0);
 
     xSemaphoreTake(xMutex1,portMAX_DELAY);
-
     if(digitalRead(in_01))
       {
         aux_volat_IN1_task1 = 1;
@@ -400,7 +398,9 @@ void task_ihm_btn_display(void*parametro)
         {
           aux_volat_IN1_task1 = 0;
         }
+    xSemaphoreGive(xMutex1);
 
+    xSemaphoreTake(xMutex2,portMAX_DELAY);
     if(digitalRead(in_02))
       {
         aux_volat_IN2_task1 = 1;
@@ -409,7 +409,9 @@ void task_ihm_btn_display(void*parametro)
         {
           aux_volat_IN2_task1 = 0;
         }
+    xSemaphoreGive(xMutex2);
 
+    xSemaphoreTake(xMutex3,portMAX_DELAY);
     if(digitalRead(in_03))
       {
         aux_volat_IN3_task1 = 1;
@@ -418,7 +420,9 @@ void task_ihm_btn_display(void*parametro)
         {
           aux_volat_IN3_task1 = 0;
         }
+    xSemaphoreGive(xMutex3);
 
+    xSemaphoreTake(xMutex4,portMAX_DELAY);
     if(digitalRead(in_04))
       {
         aux_volat_IN4_task1 = 1;
@@ -427,12 +431,13 @@ void task_ihm_btn_display(void*parametro)
         {
           aux_volat_IN4_task1 = 0;
         }
+    xSemaphoreGive(xMutex4);
 
+    xSemaphoreTake(xMutex5,portMAX_DELAY);
     valor_analogica = analogRead(a_in_01);
     aux_volat_a0_task1 = ((valor_analogica/4095.0)*3.3);
+    xSemaphoreGive(xMutex5);
     
-    xSemaphoreGive(xMutex1);
-
     delay(500);
   }
 }
@@ -441,6 +446,7 @@ void task_logica1(void*parametro)
 {  
   while(1)
   {
+    //recebe parametros da fila
     /*int receiveValue;
     if(xQueueReceive(integerQueue1, &receiveValue, portMAX_DELAY))
     {
