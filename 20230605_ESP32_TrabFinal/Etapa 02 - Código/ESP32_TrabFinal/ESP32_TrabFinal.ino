@@ -79,6 +79,8 @@ int   menu_number           = 1,
       aux_OP1_escolhida     = 1,
       aux_escolha_OP2       = 1,
       aux_OP2_escolhida     = 1,
+      aux_valor_tempo_escol = 0,
+      aux_threshold_escol   = 0,
       aux_confirma          = 1,
       aux_escolha_OK        = 1;
 
@@ -348,7 +350,7 @@ void task_ihm_btn_display(void*parametro)
                   Serial.println("IN4");                                                      
                   break;
           case 6:
-                  Serial.println("ANALOG_IN1");
+                  Serial.print("ANALOG_IN1= ");
                   break;
         }
       }
@@ -372,7 +374,7 @@ void task_ihm_btn_display(void*parametro)
                   Serial.println("NOT");                                                 
                   break;
           case 5:
-                  Serial.println("DELAY");                                                      
+                  Serial.print("DELAY= ");                                                      
                   break;
         }
       }
@@ -381,16 +383,21 @@ void task_ihm_btn_display(void*parametro)
     // --- Ajusta tempo de delay---
     if(menu_operacoes == 5)
     {
-    int valor = analogRead(a_in_01);
-    int valor_tempo = map(valor, valorMinimo, valorMaximo, valorMinimoMapeado, valorMaximoMapeado);
+      int valor = analogRead(a_in_01);
+      int valor_tempo = map(valor, valorMinimo, valorMaximo, valorMinimoMapeado, valorMaximoMapeado);
+      aux_valor_tempo_escol = valor_tempo;
+      Serial.print(valor_tempo);
+      Serial.println("s");
     }
-
+    
     // --- Ajusta Threshold ---
     if(menu_entradas == 6)
     {
-    int valor_Threshold = analogRead(a_in_01);
-    float valor_Map_threshold = map(valor_Threshold, valor_minimo_threshold, valor_maximo_threshold, valor_minimo_map_threshold, valor_maximo_map_threshold) / 1000.0;
-
+      int valor_Threshold = analogRead(a_in_01);
+      float valor_Map_threshold = map(valor_Threshold, valor_minimo_threshold, valor_maximo_threshold, valor_minimo_map_threshold, valor_maximo_map_threshold) / 1000.0;
+      aux_threshold_escol = valor_Map_threshold * 1000;
+      Serial.print(valor_Map_threshold);
+      Serial.println(" V");
     }
 
 
@@ -403,11 +410,11 @@ void task_ihm_btn_display(void*parametro)
         -valor_Map_threshold
 
     */
-    //xQueueSendToBack(integerQueue1, &valor_Map_threshold, 0);
+    
     if(enviando_valores)
     {
-      int tamanho_fila = 4;
-      int valores[] = {aux_IN1_escolhida, aux_IN2_escolhida, aux_OP1_escolhida, aux_OP2_escolhida};
+      int tamanho_fila = 6;
+      int valores[] = {aux_IN1_escolhida, aux_IN2_escolhida, aux_OP1_escolhida, aux_OP2_escolhida, aux_valor_tempo_escol, aux_threshold_escol};
 
       for (int i = 0; i < tamanho_fila; i++) 
       {
@@ -445,6 +452,8 @@ void task_ihm_btn_display(void*parametro)
       aux_IN2_escolhida     = 1;
       aux_OP1_escolhida     = 1;
       aux_OP2_escolhida     = 1;
+      aux_valor_tempo_escol = 0;
+      aux_threshold_escol   = 0;
       //=================================================================================
     }
 
@@ -550,7 +559,8 @@ void task_ihm_btn_display(void*parametro)
 
 void task_logica1(void*parametro)
 {  
-  int valores_recebidos_task1[4] = {0, 0, 0, 0};
+  int valores_recebidos_task1[6] = {0, 0, 0, 0, 0, 0};
+  float receive_analog_task1;
 
   while(1)
   {
@@ -564,7 +574,7 @@ void task_logica1(void*parametro)
     
     xSemaphoreGive(xMutex1);
 
-    int tamanho_fila = 4;
+    int tamanho_fila = 6;
     
     if (uxQueueMessagesWaiting(integerQueue1) > 0)
     {
@@ -576,14 +586,21 @@ void task_logica1(void*parametro)
         }
     }    
     
-    /*Serial.print("Task1_1: ");
+    receive_analog_task1 = valores_recebidos_task1[5] / 1000.0;
+    /*
+    Serial.print("Task1_1: ");
     Serial.println(valores_recebidos_task1[0]);
     Serial.print("Task1_2: ");
     Serial.println(valores_recebidos_task1[1]);
     Serial.print("Task1_3: ");
     Serial.println(valores_recebidos_task1[2]);
     Serial.print("Task1_4: ");
-    Serial.println(valores_recebidos_task1[3]);*/
+    Serial.println(valores_recebidos_task1[3]);
+    Serial.print("Task1_5: ");
+    Serial.println(valores_recebidos_task1[4]);
+    Serial.print("Task1_6: ");
+    Serial.println(valores_recebidos_task1[5]);
+    Serial.println(receive_analog_task1);*/
     
     delay(500);
   }
@@ -591,8 +608,9 @@ void task_logica1(void*parametro)
 
 void task_logica2(void*parametro)
 {  
-  int valores_recebidos_task2[4] = {0, 0, 0, 0};
-
+  int valores_recebidos_task2[6] = {0, 0, 0, 0, 0, 0};
+  float receive_analog_task2;
+  
   while(1)
   {
     xSemaphoreTake(xMutex2,portMAX_DELAY);
@@ -606,7 +624,7 @@ void task_logica2(void*parametro)
     xSemaphoreGive(xMutex2);
     
 
-    int tamanho_fila = 4;
+    int tamanho_fila = 6;
     
     if (uxQueueMessagesWaiting(integerQueue2) > 0)
     {
@@ -618,14 +636,21 @@ void task_logica2(void*parametro)
         }
     }
     
-    /*Serial.print("Task2_1: ");
+    receive_analog_task2 = valores_recebidos_task2[5] / 1000.0;
+    /*
+    Serial.print("Task2_1: ");
     Serial.println(valores_recebidos_task2[0]);
     Serial.print("Task2_2: ");
     Serial.println(valores_recebidos_task2[1]);
     Serial.print("Task2_3: ");
     Serial.println(valores_recebidos_task2[2]);
     Serial.print("Task2_4: ");
-    Serial.println(valores_recebidos_task2[3]);*/
+    Serial.println(valores_recebidos_task2[3]);
+    Serial.print("Task2_5: ");
+    Serial.println(valores_recebidos_task2[4]);
+    Serial.print("Task2_6: ");
+    Serial.println(valores_recebidos_task2[5]);
+    Serial.println(receive_analog_task2);*/
 
     delay(500);
   }
@@ -633,12 +658,13 @@ void task_logica2(void*parametro)
 
 void task_logica3(void*parametro)
 {  
-  int valores_recebidos_task3[4] = {0, 0, 0, 0};
-
+  int valores_recebidos_task3[6] = {0, 0, 0, 0, 0, 0};
+  float receive_analog_task3;
+  
   while(1)
   {
     
-    int tamanho_fila = 4;
+    int tamanho_fila = 6;
     
     if (uxQueueMessagesWaiting(integerQueue3) > 0)
     {
@@ -649,15 +675,22 @@ void task_logica3(void*parametro)
           valores_recebidos_task3[i] = valor_recebido_task3;        
         }
     }
-    
-    /*Serial.print("Task3_1: ");
+
+    receive_analog_task3 = valores_recebidos_task3[5] / 1000.0;
+    /*
+    Serial.print("Task3_1: ");
     Serial.println(valores_recebidos_task3[0]);
     Serial.print("Task3_2: ");
     Serial.println(valores_recebidos_task3[1]);
     Serial.print("Task3_3: ");
     Serial.println(valores_recebidos_task3[2]);
     Serial.print("Task3_4: ");
-    Serial.println(valores_recebidos_task3[3]);*/
+    Serial.println(valores_recebidos_task3[3]);
+    Serial.print("Task3_5: ");
+    Serial.println(valores_recebidos_task3[4]);
+    Serial.print("Task3_6: ");
+    Serial.println(valores_recebidos_task3[5]);
+    Serial.println(receive_analog_task3);*/
    
 
     delay(500);
@@ -666,11 +699,12 @@ void task_logica3(void*parametro)
 
 void task_logica4(void*parametro)
 {  
-  int valores_recebidos_task4[4] = {0, 0, 0, 0};
+  int valores_recebidos_task4[6] = {0, 0, 0, 0, 0, 0};
+  float receive_analog_task4;
 
   while(1)
   {
-    int tamanho_fila = 4;
+    int tamanho_fila = 6;
     
     if (uxQueueMessagesWaiting(integerQueue4) > 0)
     {
@@ -681,16 +715,23 @@ void task_logica4(void*parametro)
           valores_recebidos_task4[i] = valor_recebido_task4;        
         }
     }
-    
-    /*Serial.print("Task4_1: ");
+
+    receive_analog_task4 = valores_recebidos_task4[5] / 1000.0;
+    /*
+    Serial.print("Task4_1: ");
     Serial.println(valores_recebidos_task4[0]);
     Serial.print("Task4_2: ");
     Serial.println(valores_recebidos_task4[1]);
     Serial.print("Task4_3: ");
     Serial.println(valores_recebidos_task4[2]);
     Serial.print("Task4_4: ");
-    Serial.println(valores_recebidos_task4[3]);*/
-
+    Serial.println(valores_recebidos_task4[3]);
+    Serial.print("Task4_5: ");
+    Serial.println(valores_recebidos_task4[4]);
+    Serial.print("Task4_6: ");
+    Serial.println(valores_recebidos_task4[5]);
+    Serial.println(receive_analog_task4);*/
+    
     delay(500);
   }
 }
