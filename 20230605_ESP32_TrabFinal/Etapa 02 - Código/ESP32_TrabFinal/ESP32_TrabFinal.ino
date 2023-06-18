@@ -44,7 +44,6 @@ QueueHandle_t integerQueue1,
 #define out_04 GPIO_NUM_32
 //==========================================================================
 
-<<<<<<< HEAD
 // --- Defines do Display ---
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
@@ -54,21 +53,15 @@ QueueHandle_t integerQueue1,
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0d5c6eabb16ff19ad719ddbe1a49351705f8ef33
 int aux_conta = 0;
 int filaIndex = 0;
 
-=======
 volatile int    aux_volat_IN1_task1 = 0,
                 aux_volat_IN2_task1 = 0,
                 aux_volat_IN3_task1 = 0,
                 aux_volat_IN4_task1 = 0;
 
 volatile float  aux_volat_a0_task1 = 0;
->>>>>>> 37fbb292b3fb5ee51aa5c769150f2d9f258dae22
 
 int   menu_number           = 1,
       menu_operacoes        = 1,
@@ -96,13 +89,10 @@ int aux_conta               = 0,
 float threshold_Valor       = 0.0;
 
 
-
-<<<<<<< HEAD
-=======
 bool aux_bt_pp     = 0,
      aux_bt_mm     = 0,
      aux_bt_ok     = 0;
->>>>>>> 0d5c6eabb16ff19ad719ddbe1a49351705f8ef33
+
 
 TickType_t xTimeBefore, xTotalTimeSuspended;
 
@@ -110,16 +100,14 @@ SemaphoreHandle_t xMutex1;
 SemaphoreHandle_t xMutex2;
 SemaphoreHandle_t xMutex3;
 SemaphoreHandle_t xMutex4;
-<<<<<<< HEAD
-=======
+
 SemaphoreHandle_t xMutex5;
->>>>>>> 37fbb292b3fb5ee51aa5c769150f2d9f258dae22
 
 void task_ihm_btn_display(void*parametro)
-<<<<<<< HEAD
+
 {
   while(1)
-<<<<<<< HEAD
+
   {
     xSemaphoreTake(xMutex1, portMAX_DELAY);
 
@@ -137,7 +125,7 @@ void task_ihm_btn_display(void*parametro)
   display.setCursor(0, 0);
   display.println(" -- .... ++ .... OK");
   display.display();                                                                               
-=======
+
   { 
       int valor_analogica;
 
@@ -216,7 +204,7 @@ void task_ihm_btn_display(void*parametro)
               aux_OP2_escolhida = max_escolha_operacoes;
             }
           // ===============================================================                                                 
->>>>>>> 37fbb292b3fb5ee51aa5c769150f2d9f258dae22
+
       }
 
       if(!digitalRead(bt_mm))  aux_bt_mm  = 1;                             
@@ -294,11 +282,6 @@ void task_ihm_btn_display(void*parametro)
             
           }                                                                             
       }
-      
-
-<<<<<<< HEAD
-    
-
   
 
  // display.setTextSize(1);
@@ -312,14 +295,12 @@ void task_ihm_btn_display(void*parametro)
 }
 
 void task_logica_1(void*parametro)
-=======
->>>>>>> 0d5c6eabb16ff19ad719ddbe1a49351705f8ef33
+
 {
   while(1)
   {
     xSemaphoreTake(xMutex1,portMAX_DELAY);
 
-<<<<<<< HEAD
       if(!digitalRead(in_01))  aux_bt_pp  = 1;                             
       if(digitalRead(in_01) && aux_bt_pp)                                  
       {
@@ -330,7 +311,7 @@ void task_logica_1(void*parametro)
 
       if(!digitalRead(in_02))  aux_bt_mm  = 1;                             
       if(digitalRead(in_02) && aux_bt_mm)                                  
-=======
+
       if(!digitalRead(bt_pp))  aux_bt_pp  = 1;                             
       if(digitalRead(bt_pp) && aux_bt_pp)                                  
       {
@@ -339,18 +320,17 @@ void task_logica_1(void*parametro)
 
       if(!digitalRead(bt_mm))  aux_bt_mm  = 1;                             
       if(digitalRead(bt_mm) && aux_bt_mm)                                  
->>>>>>> 0d5c6eabb16ff19ad719ddbe1a49351705f8ef33
+
       {
         aux_bt_mm = 0;                                                                              
       }
 
-<<<<<<< HEAD
       if(!digitalRead(in_03))  aux_bt_ok  = 1;                             
       if(digitalRead(in_03) && aux_bt_ok)                                  
       {
         aux_bt_ok = 0;                                                                              
       }
-=======
+
       if(!digitalRead(bt_ok))  aux_bt_ok  = 1;                             
       if(digitalRead(bt_ok) && aux_bt_ok)                                  
       {
@@ -360,10 +340,9 @@ void task_logica_1(void*parametro)
     String var = ":";
     Serial.print("+...-...ok "); 
     Serial.println("");
-=======
+
       Serial.println("+...-...ok ");
       Serial.printf("CONFIORMA: %d \n", aux_confirma);
->>>>>>> 37fbb292b3fb5ee51aa5c769150f2d9f258dae22
 
     // --- Mostra o menu --- ===============================================
     switch(menu_number)
@@ -578,8 +557,7 @@ void task_logica1(void*parametro)
       {
         Serial.println("Mutex");
       }                         
-    
-<<<<<<< HEAD
+
     String var = ":";
     Serial.print("Cronometro "); 
     Serial.print(h + var + m + var + s);
@@ -595,10 +573,8 @@ void task_logica1(void*parametro)
     Serial.println("");
 
     xSemaphoreGive(xMutex2);
->>>>>>> 0d5c6eabb16ff19ad719ddbe1a49351705f8ef33
-=======
+
     xSemaphoreGive(xMutex1);
->>>>>>> 37fbb292b3fb5ee51aa5c769150f2d9f258dae22
 
     delay(500);
   }
@@ -641,8 +617,6 @@ void setup()
   xMutex2 = xSemaphoreCreateMutex();
   xMutex3 = xSemaphoreCreateMutex();
   xMutex4 = xSemaphoreCreateMutex();
-<<<<<<< HEAD
-
 
 //inicializa o display
   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
@@ -652,8 +626,6 @@ void setup()
   delay(2000);
   display.clearDisplay();
 
-
-=======
   xMutex5 = xSemaphoreCreateMutex();
 
 // --- Criação das filas ---================================================
@@ -670,7 +642,6 @@ void setup()
                               sizeof(int) // Queue item size
                               );
 //==========================================================================
->>>>>>> 37fbb292b3fb5ee51aa5c769150f2d9f258dae22
 
   //Cria tarefa 1
   xTaskCreatePinnedToCore(
@@ -682,8 +653,7 @@ void setup()
               NULL,
               0        //Identificador da tarefa
               );
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 
   //Cria tarefa 2
   xTaskCreatePinnedToCore(
@@ -695,9 +665,7 @@ void setup()
               NULL,
               0        //Identificador da tarefa
               );
-=======
->>>>>>> 0d5c6eabb16ff19ad719ddbe1a49351705f8ef33
-=======
+
 
   //Cria tarefa 2
   xTaskCreatePinnedToCore(
@@ -709,16 +677,13 @@ void setup()
               NULL,
               0        //Identificador da tarefa
               );
->>>>>>> 37fbb292b3fb5ee51aa5c769150f2d9f258dae22
+
   
 }
 
 // the loop function runs over and over again forever
 void loop() 
 { 
-<<<<<<< HEAD
 
 }
-=======
-}
->>>>>>> 37fbb292b3fb5ee51aa5c769150f2d9f258dae22
+  }
