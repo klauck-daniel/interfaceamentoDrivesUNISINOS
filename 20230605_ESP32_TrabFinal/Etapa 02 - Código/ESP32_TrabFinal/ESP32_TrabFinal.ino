@@ -400,7 +400,7 @@ void task_ihm_btn_display(void*parametro)
         if(aux_task_escolhida == 1)
         {
           xQueueSend(integerQueue1, &valores[i], portMAX_DELAY);
-          vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
+          vTaskDelay(pdMS_TO_TICKS(100)); // Atraso de 1 segundo entre cada envio
         }
 
         if(aux_task_escolhida == 2)
@@ -435,7 +435,7 @@ void task_ihm_btn_display(void*parametro)
     }
 
     xSemaphoreTake(xMutex1,portMAX_DELAY);
-Serial.println(aux_volat_IN1_task1);
+
     if(digitalRead(in_01))
       {
         aux_volat_IN1_task1 = 1;
@@ -485,33 +485,6 @@ void task_logica1(void*parametro)
 {  
   while(1)
   {
-    /*int receiveValue;
-    if(xQueueReceive(integerQueue1, &receiveValue, portMAX_DELAY))
-    {
-      Serial.print(receiveValue);
-      if(receiveValue)
-    }*/
-
-    int valorRecebido,
-        aux1,
-        aux2,
-        aux3,
-        aux4;
-
-    int tamanho_fila = 4;
-    int valor1 = 0;
-    int valores_recebidos[] = {aux1, aux2, aux3, aux4};
-    for (int i = 0; i < tamanho_fila; i++)
-    {
-      if (xQueueReceive(integerQueue1, &valorRecebido, portMAX_DELAY)) 
-      {
-        valores_recebidos[i] = valorRecebido;
-            // Processar o valor recebido
-            printf("Valor recebido: %d\n", valorRecebido);
-      }
-    }
-    valor1 = valores_recebidos[1];
-
     xSemaphoreTake(xMutex1,portMAX_DELAY);
 
     //Teste leitura entrada IN1 pela task
@@ -523,6 +496,36 @@ void task_logica1(void*parametro)
     
     xSemaphoreGive(xMutex1);
 
+    int aux1,
+        aux2,
+        aux3,
+        aux4;
+
+    int tamanho_fila = 4;
+    
+      int valoresRecebidos[4];
+
+    if (uxQueueMessagesWaiting(integerQueue1) > 0)
+    {
+      for (int i = 0; i < tamanho_fila; i++)
+        {      
+        int valorRecebido;
+
+          xQueueReceive(integerQueue1, &valorRecebido, pdMS_TO_TICKS(1000));
+          valoresRecebidos[i] = valorRecebido;        
+        }
+    }    
+
+    
+    Serial.print("Valor recebido1: ");
+    Serial.println(valoresRecebidos[0]);
+    Serial.print("Valor recebido2: ");
+    Serial.println(valoresRecebidos[1]);
+    Serial.print("Valor recebido3: ");
+    Serial.println(valoresRecebidos[2]);
+    Serial.print("Valor recebido4: ");
+    Serial.println(valoresRecebidos[3]);
+    
     delay(500);
   }
 }
@@ -533,7 +536,7 @@ void task_logica2(void*parametro)
   {
     
     int valorRecebido;
-    if (xQueueReceive(integerQueue2, &valorRecebido, portMAX_DELAY)) {
+    if (xQueueReceive(integerQueue2, &valorRecebido, pdMS_TO_TICKS(100))) {
             // Processar o valor recebido
             printf("Valor recebido: %d\n", valorRecebido);
         }
@@ -549,7 +552,7 @@ void task_logica3(void*parametro)
   {
     
     int valorRecebido;
-    if (xQueueReceive(integerQueue3, &valorRecebido, portMAX_DELAY)) {
+    if (xQueueReceive(integerQueue3, &valorRecebido, pdMS_TO_TICKS(100))) {
             // Processar o valor recebido
             printf("Valor recebido: %d\n", valorRecebido);
         }
@@ -565,7 +568,7 @@ void task_logica4(void*parametro)
   {
     
     int valorRecebido;
-    if (xQueueReceive(integerQueue4, &valorRecebido, portMAX_DELAY)) {
+    if (xQueueReceive(integerQueue4, &valorRecebido, pdMS_TO_TICKS(100))) {
             // Processar o valor recebido
             printf("Valor recebido: %d\n", valorRecebido);
         }
