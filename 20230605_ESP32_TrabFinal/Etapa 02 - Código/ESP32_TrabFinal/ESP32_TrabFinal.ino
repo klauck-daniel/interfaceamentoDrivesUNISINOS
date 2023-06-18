@@ -47,9 +47,24 @@ QueueHandle_t integerQueue1,
 volatile int    aux_volat_IN1_task1 = 0,
                 aux_volat_IN2_task1 = 0,
                 aux_volat_IN3_task1 = 0,
-                aux_volat_IN4_task1 = 0;
+                aux_volat_IN4_task1 = 0,
+                aux_volat_IN1_task2 = 0,
+                aux_volat_IN2_task2 = 0,
+                aux_volat_IN3_task2 = 0,
+                aux_volat_IN4_task2 = 0,
+                aux_volat_IN1_task3 = 0,
+                aux_volat_IN2_task3 = 0,
+                aux_volat_IN3_task3 = 0,
+                aux_volat_IN4_task3 = 0,
+                aux_volat_IN1_task4 = 0,
+                aux_volat_IN2_task4 = 0,
+                aux_volat_IN3_task4 = 0,
+                aux_volat_IN4_task4 = 0;
 
-volatile float  aux_volat_a0_task1 = 0;
+volatile float  aux_volat_a0_task1 = 0,
+                aux_volat_a0_task2 = 0,
+                aux_volat_a0_task3 = 0,
+                aux_volat_a0_task4 = 0;
 
 int   menu_number           = 1,
       menu_operacoes        = 1,
@@ -236,13 +251,12 @@ void task_ihm_btn_display(void*parametro)
           menu_number = 1;
           delay(150);
           
-          if(aux_escolha_OK == 1){
-            
+          if(aux_escolha_OK == 1)
+            {            
                 Serial.println("ENVIA DADOS ");
                 enviando_valores = 1;
                 delay(500);  
-            
-          }                                                                             
+            }                                                                             
       }
       
 
@@ -406,19 +420,19 @@ void task_ihm_btn_display(void*parametro)
         if(aux_task_escolhida == 2)
         {
           xQueueSend(integerQueue2, &valores[i], portMAX_DELAY);
-          vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
+          vTaskDelay(pdMS_TO_TICKS(100)); // Atraso de 1 segundo entre cada envio
         }
 
         if(aux_task_escolhida == 3)
         {
           xQueueSend(integerQueue3, &valores[i], portMAX_DELAY);
-          vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
+          vTaskDelay(pdMS_TO_TICKS(100)); // Atraso de 1 segundo entre cada envio
         }
 
         if(aux_task_escolhida == 4)
         {
           xQueueSend(integerQueue4, &valores[i], portMAX_DELAY);
-          vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
+          vTaskDelay(pdMS_TO_TICKS(100)); // Atraso de 1 segundo entre cada envio
         }
       }
       // --- Encerra o envio dos dados --- ==============================================
@@ -434,48 +448,101 @@ void task_ihm_btn_display(void*parametro)
       //=================================================================================
     }
 
+    // --- Inicializa mutex 1 para a entrada in_01 --- ====================================
     xSemaphoreTake(xMutex1,portMAX_DELAY);
 
     if(digitalRead(in_01))
       {
         aux_volat_IN1_task1 = 1;
+        aux_volat_IN1_task2 = 1;
+        aux_volat_IN1_task3 = 1;
+        aux_volat_IN1_task4 = 1;
       }
       else
         {
           aux_volat_IN1_task1 = 0;
+          aux_volat_IN1_task2 = 0;
+          aux_volat_IN1_task3 = 0;
+          aux_volat_IN1_task4 = 0;
         }
+
+    xSemaphoreGive(xMutex1);
+    //=================================================================================
+
+    // --- Inicializa mutex 2 para a entrada in_02 --- ====================================
+    xSemaphoreTake(xMutex2,portMAX_DELAY);
 
     if(digitalRead(in_02))
       {
         aux_volat_IN2_task1 = 1;
+        aux_volat_IN2_task2 = 1;
+        aux_volat_IN2_task3 = 1;
+        aux_volat_IN2_task4 = 1;
       }
       else
         {
           aux_volat_IN2_task1 = 0;
+          aux_volat_IN2_task2 = 0;
+          aux_volat_IN2_task3 = 0;
+          aux_volat_IN2_task4 = 0;
         }
+
+    xSemaphoreGive(xMutex2);
+    //=================================================================================
+
+    // --- Inicializa mutex 3 para a entrada in_03 --- ====================================
+    xSemaphoreTake(xMutex3,portMAX_DELAY);
 
     if(digitalRead(in_03))
       {
         aux_volat_IN3_task1 = 1;
+        aux_volat_IN3_task2 = 1;
+        aux_volat_IN3_task3 = 1;
+        aux_volat_IN3_task4 = 1;
       }
       else
         {
           aux_volat_IN3_task1 = 0;
+          aux_volat_IN3_task2 = 0;
+          aux_volat_IN3_task3 = 0;
+          aux_volat_IN3_task4 = 0;
         }
+    
+    xSemaphoreGive(xMutex3);
+    //=================================================================================
+
+    // --- Inicializa mutex 4 para a entrada in_04 --- ====================================
+    xSemaphoreTake(xMutex4,portMAX_DELAY);
 
     if(digitalRead(in_04))
       {
         aux_volat_IN4_task1 = 1;
+        aux_volat_IN4_task2 = 1;
+        aux_volat_IN4_task3 = 1;
+        aux_volat_IN4_task4 = 1;
       }
       else
         {
           aux_volat_IN4_task1 = 0;
+          aux_volat_IN4_task2 = 0;
+          aux_volat_IN4_task3 = 0;
+          aux_volat_IN4_task4 = 0;
         }
+    
+    xSemaphoreGive(xMutex4);
+    //=================================================================================
+
+    // --- Inicializa mutex 5 para a entrada a_in_01 --- ====================================
+    xSemaphoreTake(xMutex5,portMAX_DELAY);
 
     valor_analogica = analogRead(a_in_01);
     aux_volat_a0_task1 = ((valor_analogica/4095.0)*3.3);
-    
-    xSemaphoreGive(xMutex1);
+    aux_volat_a0_task2 = ((valor_analogica/4095.0)*3.3);
+    aux_volat_a0_task3 = ((valor_analogica/4095.0)*3.3);
+    aux_volat_a0_task4 = ((valor_analogica/4095.0)*3.3);
+
+    xSemaphoreGive(xMutex5);
+    //=================================================================================  
 
     delay(500);
   }
@@ -483,6 +550,8 @@ void task_ihm_btn_display(void*parametro)
 
 void task_logica1(void*parametro)
 {  
+  int valores_recebidos_task1[4] = {0, 0, 0, 0};
+
   while(1)
   {
     xSemaphoreTake(xMutex1,portMAX_DELAY);
@@ -490,41 +559,31 @@ void task_logica1(void*parametro)
     //Teste leitura entrada IN1 pela task
     if(aux_volat_IN1_task1)
       {
-        Serial.println("Mutex");
-        //Serial.println(valor1);
+        Serial.println("Mutex1");
       }                         
     
     xSemaphoreGive(xMutex1);
 
-    int aux1,
-        aux2,
-        aux3,
-        aux4;
-
     int tamanho_fila = 4;
     
-      int valoresRecebidos[4];
-
     if (uxQueueMessagesWaiting(integerQueue1) > 0)
     {
       for (int i = 0; i < tamanho_fila; i++)
         {      
-        int valorRecebido;
-
-          xQueueReceive(integerQueue1, &valorRecebido, pdMS_TO_TICKS(1000));
-          valoresRecebidos[i] = valorRecebido;        
+          int valor_recebido_task1;
+          xQueueReceive(integerQueue1, &valor_recebido_task1, pdMS_TO_TICKS(1000));
+          valores_recebidos_task1[i] = valor_recebido_task1;        
         }
     }    
-
     
-    Serial.print("Valor recebido1: ");
-    Serial.println(valoresRecebidos[0]);
-    Serial.print("Valor recebido2: ");
-    Serial.println(valoresRecebidos[1]);
-    Serial.print("Valor recebido3: ");
-    Serial.println(valoresRecebidos[2]);
-    Serial.print("Valor recebido4: ");
-    Serial.println(valoresRecebidos[3]);
+    /*Serial.print("Task1_1: ");
+    Serial.println(valores_recebidos_task1[0]);
+    Serial.print("Task1_2: ");
+    Serial.println(valores_recebidos_task1[1]);
+    Serial.print("Task1_3: ");
+    Serial.println(valores_recebidos_task1[2]);
+    Serial.print("Task1_4: ");
+    Serial.println(valores_recebidos_task1[3]);*/
     
     delay(500);
   }
@@ -532,15 +591,41 @@ void task_logica1(void*parametro)
 
 void task_logica2(void*parametro)
 {  
+  int valores_recebidos_task2[4] = {0, 0, 0, 0};
+
   while(1)
   {
+    xSemaphoreTake(xMutex2,portMAX_DELAY);
+
+    //Teste leitura entrada IN1 pela task
+    if(aux_volat_IN1_task2)
+      {
+        Serial.println("Mutex2");
+      }                         
     
-    int valorRecebido;
-    if (xQueueReceive(integerQueue2, &valorRecebido, pdMS_TO_TICKS(100))) {
-            // Processar o valor recebido
-            printf("Valor recebido: %d\n", valorRecebido);
+    xSemaphoreGive(xMutex2);
+    
+
+    int tamanho_fila = 4;
+    
+    if (uxQueueMessagesWaiting(integerQueue2) > 0)
+    {
+      for (int i = 0; i < tamanho_fila; i++)
+        {      
+          int valor_recebido_task2;
+          xQueueReceive(integerQueue2, &valor_recebido_task2, pdMS_TO_TICKS(1000));
+          valores_recebidos_task2[i] = valor_recebido_task2;        
         }
-   
+    }
+    
+    /*Serial.print("Task2_1: ");
+    Serial.println(valores_recebidos_task2[0]);
+    Serial.print("Task2_2: ");
+    Serial.println(valores_recebidos_task2[1]);
+    Serial.print("Task2_3: ");
+    Serial.println(valores_recebidos_task2[2]);
+    Serial.print("Task2_4: ");
+    Serial.println(valores_recebidos_task2[3]);*/
 
     delay(500);
   }
@@ -548,14 +633,31 @@ void task_logica2(void*parametro)
 
 void task_logica3(void*parametro)
 {  
+  int valores_recebidos_task3[4] = {0, 0, 0, 0};
+
   while(1)
   {
     
-    int valorRecebido;
-    if (xQueueReceive(integerQueue3, &valorRecebido, pdMS_TO_TICKS(100))) {
-            // Processar o valor recebido
-            printf("Valor recebido: %d\n", valorRecebido);
+    int tamanho_fila = 4;
+    
+    if (uxQueueMessagesWaiting(integerQueue3) > 0)
+    {
+      for (int i = 0; i < tamanho_fila; i++)
+        {      
+          int valor_recebido_task3;
+          xQueueReceive(integerQueue3, &valor_recebido_task3, pdMS_TO_TICKS(1000));
+          valores_recebidos_task3[i] = valor_recebido_task3;        
         }
+    }
+    
+    /*Serial.print("Task3_1: ");
+    Serial.println(valores_recebidos_task3[0]);
+    Serial.print("Task3_2: ");
+    Serial.println(valores_recebidos_task3[1]);
+    Serial.print("Task3_3: ");
+    Serial.println(valores_recebidos_task3[2]);
+    Serial.print("Task3_4: ");
+    Serial.println(valores_recebidos_task3[3]);*/
    
 
     delay(500);
@@ -564,15 +666,30 @@ void task_logica3(void*parametro)
 
 void task_logica4(void*parametro)
 {  
+  int valores_recebidos_task4[4] = {0, 0, 0, 0};
+
   while(1)
   {
+    int tamanho_fila = 4;
     
-    int valorRecebido;
-    if (xQueueReceive(integerQueue4, &valorRecebido, pdMS_TO_TICKS(100))) {
-            // Processar o valor recebido
-            printf("Valor recebido: %d\n", valorRecebido);
+    if (uxQueueMessagesWaiting(integerQueue4) > 0)
+    {
+      for (int i = 0; i < tamanho_fila; i++)
+        {      
+          int valor_recebido_task4;
+          xQueueReceive(integerQueue4, &valor_recebido_task4, pdMS_TO_TICKS(1000));
+          valores_recebidos_task4[i] = valor_recebido_task4;        
         }
-   
+    }
+    
+    /*Serial.print("Task4_1: ");
+    Serial.println(valores_recebidos_task4[0]);
+    Serial.print("Task4_2: ");
+    Serial.println(valores_recebidos_task4[1]);
+    Serial.print("Task4_3: ");
+    Serial.println(valores_recebidos_task4[2]);
+    Serial.print("Task4_4: ");
+    Serial.println(valores_recebidos_task4[3]);*/
 
     delay(500);
   }
