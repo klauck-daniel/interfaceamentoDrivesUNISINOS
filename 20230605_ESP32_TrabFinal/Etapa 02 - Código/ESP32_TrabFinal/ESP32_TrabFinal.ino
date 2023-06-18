@@ -604,6 +604,771 @@ void task_logica1(void *parametro)
         Serial.println(receive_analog_task1);*/
 
         delay(500);
+
+    int tsk1_in_1 = valores_recebidos[0];
+    int tsk1_in_2 = valores_recebidos[1];
+    int tsk1_op_1 = valores_recebidos[2];
+    int tsk1_op_2 = valores_recebidos[3];
+    int out_parcial = 0;
+
+    // Verifica se a variável 1 está como NADA e se a variável 2 tem algum valor
+    if (tsk1_in_1 == 1 && tsk1_in_2 != 1)
+    {
+      tsk1_in_1 = tsk1_in_2;
+      tsk1_in_2 = 1;
+    }
+    // Verifica se a operação 1 está como NADA e se a operação 2 tem algum valor
+    if (tsk1_op_1 == 1 && tsk1_op_2 != 1)
+    {
+      tsk1_op_1 = tsk1_op_2;
+      tsk1_op_2 = 1;
+    }
+
+    // Caso ambas as operações sejam NADA
+    if (tsk_op_1 == 1 && tsk_op_2 == 1)
+    {
+      // Caso ambas entradas sejam NADA
+      if (tsk1_in_1 == 1 && tsk2_in_1 == 1)
+      {
+        out_01 = 0;
+      }
+      // Caso uma entrada esteja setada
+      if ((tsk1_in_1 == 2 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 2))
+      {
+        out_01 = in_01;
+      }
+      if ((tsk1_in_1 == 3 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 3))
+      {
+        out_01 = in_02;
+      }
+      if ((tsk1_in_1 == 4 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 4))
+      {
+        out_01 = in_03;
+      }
+      if ((tsk1_in_1 == 5 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 5))
+      {
+        out_01 = in_04;
+      }
+      if ((tsk1_in_1 == 6 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 6))
+      {
+        out_01 = a_in_01;
+      }
+    }
+
+    // Caso OPERAÇÃO 1 SEJA AND (código 2) e OPERAÇÃO 2 seja NADA, ambos os inputs devem ser != de NADA
+    if (tsk_op_1 == 2 && tsk_op_2 == 1)
+    {
+      // Caso a entrada 1 e 2 sejam as mesmas
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+      {
+        out_01 = in_01 && in_01;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+      {
+        out_01 = in_02 && in_02;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+      {
+        out_01 = in_03 && in_03;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+      {
+        out_01 = in_04 && in_04;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+      {
+        out_01 = a_in_01 && a_in_01;
+      }
+      // Casos onde as entradas são diferentes
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+      {
+        out_01 = in_01 && in_02;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+      {
+        out_01 = in_01 && in_03;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+      {
+        out_01 = in_01 && in_04;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+      {
+        out_01 = in_01 && a_in_01;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+      {
+        out_01 = in_02 && in_03;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+      {
+        out_01 = in_02 && in_03;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+      {
+        out_01 = in_02 && in_04;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+      {
+        out_01 = in_02 && a_in_01;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+      {
+        out_01 = in_03 && in_01;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+      {
+        out_01 = in_03 && in_02;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+      {
+        out_01 = in_03 && in_04;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+      {
+        out_01 = in_03 && a_in_01;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+      {
+        out_01 = in_04 && in_01;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+      {
+        out_01 = in_04 && in_02;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+      {
+        out_01 = in_04 && in_03;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+      {
+        out_01 = in_04 && a_in_01;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+      {
+        out_01 = a_in_01 && in_01;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+      {
+        out_01 = a_in_01 && in_02;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+      {
+        out_01 = a_in_01 && in_03;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+      {
+        out_01 = a_in_01 && in_04;
+      }
+    }
+
+    // Caso OPERAÇÃO 1 SEJA OR (código 3) e OPERAÇÃO 2 seja NADA, ambos os inputs devem ser != de NADA
+    if (tsk_op_1 == 3 && tsk_op_2 == 1)
+    {
+      // Caso a entrada 1 e 2 sejam as mesmas
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+      {
+        out_01 = in_01 || in_01;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+      {
+        out_01 = in_02 || in_02;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+      {
+        out_01 = in_03 || in_03;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+      {
+        out_01 = in_04 || in_04;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+      {
+        out_01 = a_in_01 || a_in_01;
+      }
+      // Casos onde as entradas são diferentes
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+      {
+        out_01 = in_01 || in_02;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+      {
+        out_01 = in_01 || in_03;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+      {
+        out_01 = in_01 || in_04;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+      {
+        out_01 = in_01 || a_in_01;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+      {
+        out_01 = in_02 || in_03;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+      {
+        out_01 = in_02 || in_03;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+      {
+        out_01 = in_02 || in_04;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+      {
+        out_01 = in_02 || a_in_01;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+      {
+        out_01 = in_03 || in_01;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+      {
+        out_01 = in_03 || in_02;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+      {
+        out_01 = in_03 || in_04;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+      {
+        out_01 = in_03 || a_in_01;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+      {
+        out_01 = in_04 || in_01;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+      {
+        out_01 = in_04 || in_02;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+      {
+        out_01 = in_04 || in_03;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+      {
+        out_01 = in_04 || a_in_01;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+      {
+        out_01 = a_in_01 || in_01;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+      {
+        out_01 = a_in_01 || in_02;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+      {
+        out_01 = a_in_01 || in_03;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+      {
+        out_01 = a_in_01 || in_04;
+      }
+    }
+
+    // Caso OPERAÇÃO 1 SEJA NOT (código 4) e OPERAÇÃO 2 seja NADA, apenas uma entrada pode estar selecionada
+    if (tsk_op_1 == 4 && tsk_op_2 == 1)
+    {
+      // Caso a operação seja direto com a entrada
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 1)
+      {
+        out_01 = !(in_01);
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 1)
+      {
+        out_01 = !(in_02);
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 1)
+      {
+        out_01 = !(in_03);
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 1)
+      {
+        out_01 = !(in_04);
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 1)
+      {
+        out_01 = !(a_in_01);
+      }
+    }
+
+    // Caso OPERAÇÃO 1 SEJA DELAY (código 5) e OPERAÇÃO 2 seja NADA, apenas uma entrada pode estar selecionada
+    if (tsk_op_1 == 5 && tsk_op_2 == 1)
+    {
+      // Caso a operação seja direto com a entrada
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 1)
+      {
+        delay(1000);
+        out_01 = in_01;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 1)
+      {
+        delay(1000);
+        out_01 = in_02;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 1)
+      {
+        delay(1000);
+        out_01 = in_03;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 1)
+      {
+        delay(1000);
+        out_01 = in_04;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 1)
+      {
+        delay(1000);
+        out_01 = a_in_01;
+      }
+    }
+
+    // Casos com duas operações
+    // Verifica se tem 2 entradas e se tem duas operações
+    if (tsk1_op_1 != 1 && tsk1_op_2 != 1 && tsk1_in_1 != 1 && tsk1_in_2 != 1)
+    {
+
+      // Caso OPERAÇÃO 1 SEJA AND (código 2) e OPERAÇÃO 2 seja NOT (código 4), ambos os inputs devem ser != de NADA
+      if (tsk_op_1 == 2 && tsk_op_2 == 4)
+      {
+        // Caso a entrada 1 e 2 sejam as mesmas
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_01 && in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_02 && in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_03 && in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_04 && in_04;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+        {
+          out_parcial = a_in_01 && a_in_01;
+        }
+        // Casos onde as entradas são diferentes
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_01 && in_02;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_01 && in_03;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_01 && in_04;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_01 && a_in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_02 && in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_02 && in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_02 && in_04;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_02 && a_in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_03 && in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_03 && in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_03 && in_04;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_03 && a_in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_04 && in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_04 && in_02;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_04 && in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_04 && a_in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+        {
+          out_parcial = a_in_01 && in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+        {
+          out_parcial = a_in_01 && in_02;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+        {
+          out_parcial = a_in_01 && in_03;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+        {
+          out_parcial = a_in_01 && in_04;
+        }
+        out_01 = !(out_parcial);
+      }
+
+      // Caso OPERAÇÃO 1 SEJA OR (código 3) e OPERAÇÃO 2 seja NOT (código 4), ambos os inputs devem ser != de NADA
+      if (tsk_op_1 == 2 && tsk_op_2 == 4)
+      {
+        // Caso a entrada 1 e 2 sejam as mesmas
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_01 || in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_02 || in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_03 || in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_04 || in_04;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+        {
+          out_parcial = a_in_01 || a_in_01;
+        }
+        // Casos onde as entradas são diferentes
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_01 || in_02;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_01 || in_03;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_01 || in_04;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_01 || a_in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_02 || in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_02 || in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_02 || in_04;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_02 || a_in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_03 || in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_03 || in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_03 || in_04;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_03 || a_in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_04 || in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_04 || in_02;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_04 || in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_04 || a_in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+        {
+          out_parcial = a_in_01 || in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+        {
+          out_parcial = a_in_01 || in_02;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+        {
+          out_parcial = a_in_01 || in_03;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+        {
+          out_parcial = a_in_01 || in_04;
+        }
+        out_01 = !(out_parcial);
+      }
+      // Caso OPERAÇÃO 1 SEJA AND (código 2) e OPERAÇÃO 2 seja DELAY (código 5), ambos os inputs devem ser != de NADA
+      if (tsk_op_1 == 2 && tsk_op_2 == 4)
+      {
+        // Caso a entrada 1 e 2 sejam as mesmas
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_01 && in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_02 && in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_03 && in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_04 && in_04;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+        {
+          out_parcial = a_in_01 && a_in_01;
+        }
+        // Casos onde as entradas são diferentes
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_01 && in_02;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_01 && in_03;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_01 && in_04;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_01 && a_in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_02 && in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_02 && in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_02 && in_04;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_02 && a_in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_03 && in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_03 && in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_03 && in_04;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_03 && a_in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_04 && in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_04 && in_02;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_04 && in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_04 && a_in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+        {
+          out_parcial = a_in_01 && in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+        {
+          out_parcial = a_in_01 && in_02;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+        {
+          out_parcial = a_in_01 && in_03;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+        {
+          out_parcial = a_in_01 && in_04;
+        }
+        delay(1000);
+        out_01 = out_parcial;
+      }
+
+      // Caso OPERAÇÃO 1 SEJA OR (código 3) e OPERAÇÃO 2 seja DELAY (código 5), ambos os inputs devem ser != de NADA
+      if (tsk_op_1 == 2 && tsk_op_2 == 4)
+      {
+        // Caso a entrada 1 e 2 sejam as mesmas
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_01 || in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_02 || in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_03 || in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_04 || in_04;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+        {
+          out_parcial = a_in_01 || a_in_01;
+        }
+        // Casos onde as entradas são diferentes
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_01 || in_02;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_01 || in_03;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_01 || in_04;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_01 || a_in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_02 || in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_02 || in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_02 || in_04;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_02 || a_in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_03 || in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_03 || in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_03 || in_04;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_03 || a_in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_04 || in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_04 || in_02;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_04 || in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_04 || a_in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+        {
+          out_parcial = a_in_01 || in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+        {
+          out_parcial = a_in_01 || in_02;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+        {
+          out_parcial = a_in_01 || in_03;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+        {
+          out_parcial = a_in_01 || in_04;
+        }
+        delay(1000);
+        out_01 = out_parcial;
+      }
+    }
+
+
+
+
+
     }
 }
 
