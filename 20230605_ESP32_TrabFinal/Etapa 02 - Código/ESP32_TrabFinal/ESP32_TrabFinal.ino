@@ -1,9 +1,9 @@
 /* =========================================================================
    @Curso de Engenharia Elétrica e Engenharia da Computação
-   @Tarefa2GB-PLC em ESP32 com FreeRTOS 
-      
+   @Tarefa2GB-PLC em ESP32 com FreeRTOS
+
    Disciplina de Interfaceamento e Drivers
-   
+
    Professor: Lúcio Rene Prade
    Autor: Daniel Klauck e Felipe Paloschi
 ============================================================================*/
@@ -17,9 +17,9 @@
 
 // -- Inicializa filas --- =================================================
 QueueHandle_t integerQueue1,
-              integerQueue2,
-              integerQueue3,
-              integerQueue4;
+    integerQueue2,
+    integerQueue3,
+    integerQueue4;
 //==========================================================================
 
 // --- Mapeamento de Hardware --- ==========================================
@@ -44,37 +44,37 @@ QueueHandle_t integerQueue1,
 #define out_04 GPIO_NUM_32
 //==========================================================================
 
-volatile int    aux_volat_IN1_task1 = 0,
-                aux_volat_IN2_task1 = 0,
-                aux_volat_IN3_task1 = 0,
-                aux_volat_IN4_task1 = 0;
+volatile int aux_volat_IN1_task1 = 0,
+             aux_volat_IN2_task1 = 0,
+             aux_volat_IN3_task1 = 0,
+             aux_volat_IN4_task1 = 0;
 
-volatile float  aux_volat_a0_task1 = 0;
+volatile float aux_volat_a0_task1 = 0;
 
-int   menu_number           = 1,
-      menu_operacoes        = 1,
-      menu_entradas         = 1,
-      aux_escolha_task      = 1,
-      aux_task_escolhida    = 1,
-      aux_escolha_IN1       = 1,
-      aux_IN1_escolhida     = 1,
-      aux_escolha_IN2       = 1,
-      aux_IN2_escolhida     = 1,
-      aux_escolha_OP1       = 1,
-      aux_OP1_escolhida     = 1,
-      aux_escolha_OP2       = 1,
-      aux_OP2_escolhida     = 1,
-      aux_confirma          = 1,
-      aux_escolha_OK        = 1;
+int menu_number = 1,
+    menu_operacoes = 1,
+    menu_entradas = 1,
+    aux_escolha_task = 1,
+    aux_task_escolhida = 1,
+    aux_escolha_IN1 = 1,
+    aux_IN1_escolhida = 1,
+    aux_escolha_IN2 = 1,
+    aux_IN2_escolhida = 1,
+    aux_escolha_OP1 = 1,
+    aux_OP1_escolhida = 1,
+    aux_escolha_OP2 = 1,
+    aux_OP2_escolhida = 1,
+    aux_confirma = 1,
+    aux_escolha_OK = 1;
 
-bool  aux_bt_pp             = 0,
-      aux_bt_mm             = 0,
-      aux_bt_ok             = 0;
+bool aux_bt_pp = 0,
+     aux_bt_mm = 0,
+     aux_bt_ok = 0;
 
-int aux_conta               = 0,
-    delay_Time              = 0;
+int aux_conta = 0,
+    delay_Time = 0;
 
-float threshold_Valor       = 0.0;
+float threshold_Valor = 0.0;
 
 TickType_t xTimeBefore, xTotalTimeSuspended;
 
@@ -84,301 +84,301 @@ SemaphoreHandle_t xMutex3;
 SemaphoreHandle_t xMutex4;
 SemaphoreHandle_t xMutex5;
 
-void task_ihm_btn_display(void*parametro)
+void task_ihm_btn_display(void *parametro)
 {
-  while(1)
-  { 
-      int valor_analogica,
-          enviando_valores;
+  while (1)
+  {
+    int valor_analogica,
+        enviando_valores;
 
-      // --- Variáveis para ajuste no valor do tempo --- =============================== 
-      const int valorMinimo = 0;
-      const int valorMaximo = 4095;
-      const int valorMinimoMapeado = 0;
-      const int valorMaximoMapeado = 15;
+    // --- Variáveis para ajuste no valor do tempo --- ===============================
+    const int valorMinimo = 0;
+    const int valorMaximo = 4095;
+    const int valorMinimoMapeado = 0;
+    const int valorMaximoMapeado = 15;
 
-      // --- Variável para ajuste no valor do Threshold --- =============================== 
-      const int valor_minimo_threshold = 0.0;
-      const int valor_maximo_threshold = 4095;
-      const int valor_minimo_map_threshold = 500;
-      const int valor_maximo_map_threshold = 3300;
+    // --- Variável para ajuste no valor do Threshold --- ===============================
+    const int valor_minimo_threshold = 0.0;
+    const int valor_maximo_threshold = 4095;
+    const int valor_minimo_map_threshold = 500;
+    const int valor_maximo_map_threshold = 3300;
 
-      // --- Variáveis --- ===============================
-      int Max_itens_menu            = 6,
-          max_task_logica           = 4,
-          max_escolha_entradas      = 6,
-          max_escolha_operacoes     = 5,
-          min_task_logica           = 1,
-          min_escolha_entradas      = 1,
-          min_escolha_operacoes     = 1;
-      
-      if(!digitalRead(bt_pp))  aux_bt_pp  = 1;                             
-      if(digitalRead(bt_pp) && aux_bt_pp)                                  
+    // --- Variáveis --- ===============================
+    int Max_itens_menu = 6,
+        max_task_logica = 4,
+        max_escolha_entradas = 6,
+        max_escolha_operacoes = 5,
+        min_task_logica = 1,
+        min_escolha_entradas = 1,
+        min_escolha_operacoes = 1;
+
+    if (!digitalRead(bt_pp))
+      aux_bt_pp = 1;
+    if (digitalRead(bt_pp) && aux_bt_pp)
+    {
+      aux_bt_pp = 0;
+
+      // --- Aumenta escolha da task --- ===============================
+      if (aux_escolha_task)
       {
-        aux_bt_pp = 0;
+        aux_task_escolhida++;
 
-          // --- Aumenta escolha da task --- ===============================
-          if(aux_escolha_task)  
-            { 
-              aux_task_escolhida ++;
-
-              if(aux_task_escolhida > max_task_logica)
-              aux_task_escolhida = max_task_logica;
-            }
-          // ===============================================================
-
-          // --- Aumenta escolha da entrada 1 --- ==========================
-          if(aux_escolha_IN1)  
-            { 
-              aux_IN1_escolhida ++;
-
-              if(aux_IN1_escolhida > max_escolha_entradas)
-              aux_IN1_escolhida = max_escolha_entradas;
-            }
-          // ===============================================================
-          
-          // --- Aumenta escolha da entrada 2 --- ==========================
-          if(aux_escolha_IN2)  
-            { 
-              aux_IN2_escolhida ++;
-
-              if(aux_IN2_escolhida > max_escolha_entradas)
-              aux_IN2_escolhida = max_escolha_entradas;
-            }
-          // ===============================================================
-          
-          // --- Aumenta escolha da operação 1 --- =========================
-          if(aux_escolha_OP1)  
-            { 
-              aux_OP1_escolhida ++;
-
-              if(aux_OP1_escolhida > max_escolha_operacoes)
-              aux_OP1_escolhida = max_escolha_operacoes;
-            }
-          // ===============================================================
-
-          // --- Aumenta escolha da operação 2 --- =========================
-          if(aux_escolha_OP2)  
-            { 
-              aux_OP2_escolhida ++;
-
-              if(aux_OP2_escolhida > max_escolha_operacoes)
-              aux_OP2_escolhida = max_escolha_operacoes;
-            }
-          // ===============================================================                                                 
+        if (aux_task_escolhida > max_task_logica)
+          aux_task_escolhida = max_task_logica;
       }
+      // ===============================================================
 
-      if(!digitalRead(bt_mm))  aux_bt_mm  = 1;                             
-      if(digitalRead(bt_mm) && aux_bt_mm)                                  
+      // --- Aumenta escolha da entrada 1 --- ==========================
+      if (aux_escolha_IN1)
       {
-        aux_bt_mm = 0;
+        aux_IN1_escolhida++;
 
-          // --- Diminui escolha da task --- ===============================
-          if(aux_escolha_task)  
-            { 
-              aux_task_escolhida --;
-
-              if(aux_task_escolhida < min_task_logica)
-              aux_task_escolhida = min_task_logica;
-            }
-          // ===============================================================
-          
-          // --- Diminui escolha da entrada 1 --- ==========================
-          if(aux_escolha_IN1)  
-            { 
-              aux_IN1_escolhida --;
-
-              if(aux_IN1_escolhida < min_escolha_entradas)
-              aux_IN1_escolhida = min_escolha_entradas;
-            }
-          // ===============================================================
-          
-          // --- Diminui escolha da entrada 2 --- ==========================
-          if(aux_escolha_IN2)  
-            { 
-              aux_IN2_escolhida --;
-
-              if(aux_IN2_escolhida < min_escolha_entradas)
-              aux_IN2_escolhida = min_escolha_entradas;
-            }
-          // ===============================================================
-
-          // --- Diminui escolha da operação 1 --- =========================
-          if(aux_escolha_OP1)  
-            { 
-              aux_OP1_escolhida --;
-
-              if(aux_OP1_escolhida < min_escolha_operacoes)
-              aux_OP1_escolhida = min_escolha_operacoes;
-            }
-          // ===============================================================
-
-          // --- Diminui escolha da operação 2 --- =========================
-          if(aux_escolha_OP2)  
-            { 
-              aux_OP2_escolhida --;
-
-              if(aux_OP2_escolhida < min_escolha_operacoes)
-              aux_OP2_escolhida = min_escolha_operacoes;
-            }
-          // ===============================================================                                                             
+        if (aux_IN1_escolhida > max_escolha_entradas)
+          aux_IN1_escolhida = max_escolha_entradas;
       }
+      // ===============================================================
 
-      if(!digitalRead(bt_ok))  aux_bt_ok  = 1;                             
-      if(digitalRead(bt_ok) && aux_bt_ok)                                  
+      // --- Aumenta escolha da entrada 2 --- ==========================
+      if (aux_escolha_IN2)
       {
-       
-        aux_bt_ok = 0;
-        
-          if(!aux_bt_ok)
-          menu_number ++;
-          if(menu_number > Max_itens_menu)  
-          menu_number = 1;
-          delay(150);
-          
-          if(aux_escolha_OK == 1){
-            
-                Serial.println("ENVIA DADOS ");
-                enviando_valores = 1;
-                delay(500);  
-            
-          }                                                                             
-      }
-      
+        aux_IN2_escolhida++;
 
-      Serial.println("+...-...ok ");
+        if (aux_IN2_escolhida > max_escolha_entradas)
+          aux_IN2_escolhida = max_escolha_entradas;
+      }
+      // ===============================================================
+
+      // --- Aumenta escolha da operação 1 --- =========================
+      if (aux_escolha_OP1)
+      {
+        aux_OP1_escolhida++;
+
+        if (aux_OP1_escolhida > max_escolha_operacoes)
+          aux_OP1_escolhida = max_escolha_operacoes;
+      }
+      // ===============================================================
+
+      // --- Aumenta escolha da operação 2 --- =========================
+      if (aux_escolha_OP2)
+      {
+        aux_OP2_escolhida++;
+
+        if (aux_OP2_escolhida > max_escolha_operacoes)
+          aux_OP2_escolhida = max_escolha_operacoes;
+      }
+      // ===============================================================
+    }
+
+    if (!digitalRead(bt_mm))
+      aux_bt_mm = 1;
+    if (digitalRead(bt_mm) && aux_bt_mm)
+    {
+      aux_bt_mm = 0;
+
+      // --- Diminui escolha da task --- ===============================
+      if (aux_escolha_task)
+      {
+        aux_task_escolhida--;
+
+        if (aux_task_escolhida < min_task_logica)
+          aux_task_escolhida = min_task_logica;
+      }
+      // ===============================================================
+
+      // --- Diminui escolha da entrada 1 --- ==========================
+      if (aux_escolha_IN1)
+      {
+        aux_IN1_escolhida--;
+
+        if (aux_IN1_escolhida < min_escolha_entradas)
+          aux_IN1_escolhida = min_escolha_entradas;
+      }
+      // ===============================================================
+
+      // --- Diminui escolha da entrada 2 --- ==========================
+      if (aux_escolha_IN2)
+      {
+        aux_IN2_escolhida--;
+
+        if (aux_IN2_escolhida < min_escolha_entradas)
+          aux_IN2_escolhida = min_escolha_entradas;
+      }
+      // ===============================================================
+
+      // --- Diminui escolha da operação 1 --- =========================
+      if (aux_escolha_OP1)
+      {
+        aux_OP1_escolhida--;
+
+        if (aux_OP1_escolhida < min_escolha_operacoes)
+          aux_OP1_escolhida = min_escolha_operacoes;
+      }
+      // ===============================================================
+
+      // --- Diminui escolha da operação 2 --- =========================
+      if (aux_escolha_OP2)
+      {
+        aux_OP2_escolhida--;
+
+        if (aux_OP2_escolhida < min_escolha_operacoes)
+          aux_OP2_escolhida = min_escolha_operacoes;
+      }
+      // ===============================================================
+    }
+
+    if (!digitalRead(bt_ok))
+      aux_bt_ok = 1;
+    if (digitalRead(bt_ok) && aux_bt_ok)
+    {
+
+      aux_bt_ok = 0;
+
+      if (!aux_bt_ok)
+        menu_number++;
+      if (menu_number > Max_itens_menu)
+        menu_number = 1;
+      delay(150);
+
+      if (aux_escolha_OK == 1)
+      {
+
+        Serial.println("ENVIA DADOS ");
+        enviando_valores = 1;
+        delay(500);
+      }
+    }
+
+    Serial.println("+...-...ok ");
 
     // --- Mostra o menu --- ===============================================
-    switch(menu_number)
+    switch (menu_number)
     {
-      case 1:
-              Serial.printf("Escolha Tarefa: %d \n", aux_task_escolhida);
-              aux_escolha_task = 1;
-              aux_escolha_IN1 = 0;
-              aux_escolha_IN2 = 0;
-              aux_escolha_OP1 = 0;
-              aux_escolha_OP2 = 0;
-              aux_escolha_OK = 0;                                 
-              break;
-      case 2:
-              Serial.print("Config_IN1: ");
-              menu_entradas = aux_IN1_escolhida;
-              aux_escolha_task = 0;
-              aux_escolha_IN1 = 1;
-              aux_escolha_IN2 = 0;
-              aux_escolha_OP1 = 0; 
-              aux_escolha_OP2 = 0;
-              aux_escolha_OK = 0;                                                      
-              break;
-      case 3:
-              Serial.print("Config_IN2: ");
-              menu_entradas = aux_IN2_escolhida;
-              aux_escolha_task = 0;
-              aux_escolha_IN1 = 0;
-              aux_escolha_IN2 = 1;
-              aux_escolha_OP1 = 0; 
-              aux_escolha_OP2 = 0;
-              aux_escolha_OK = 0;                                                       
-              break;
-      case 4:
-              Serial.print("Config_OP1: ");
-              menu_operacoes = aux_OP1_escolhida;
-              aux_escolha_task = 0;
-              aux_escolha_IN1 = 0;
-              aux_escolha_IN2 = 0;
-              aux_escolha_OP1 = 1; 
-              aux_escolha_OP2 = 0;
-              aux_escolha_OK = 0;                                                       
-              break;
-      case 5:
-              Serial.print("Config_OP2: ");
-              menu_operacoes = aux_OP2_escolhida;
-              aux_escolha_task = 0;
-              aux_escolha_IN1 = 0;
-              aux_escolha_IN2 = 0;
-              aux_escolha_OP1 = 0; 
-              aux_escolha_OP2 = 1;
-              aux_escolha_OK = 0;                                                      
-              break;
+    case 1:
+      Serial.printf("Escolha Tarefa: %d \n", aux_task_escolhida);
+      aux_escolha_task = 1;
+      aux_escolha_IN1 = 0;
+      aux_escolha_IN2 = 0;
+      aux_escolha_OP1 = 0;
+      aux_escolha_OP2 = 0;
+      aux_escolha_OK = 0;
+      break;
+    case 2:
+      Serial.print("Config_IN1: ");
+      menu_entradas = aux_IN1_escolhida;
+      aux_escolha_task = 0;
+      aux_escolha_IN1 = 1;
+      aux_escolha_IN2 = 0;
+      aux_escolha_OP1 = 0;
+      aux_escolha_OP2 = 0;
+      aux_escolha_OK = 0;
+      break;
+    case 3:
+      Serial.print("Config_IN2: ");
+      menu_entradas = aux_IN2_escolhida;
+      aux_escolha_task = 0;
+      aux_escolha_IN1 = 0;
+      aux_escolha_IN2 = 1;
+      aux_escolha_OP1 = 0;
+      aux_escolha_OP2 = 0;
+      aux_escolha_OK = 0;
+      break;
+    case 4:
+      Serial.print("Config_OP1: ");
+      menu_operacoes = aux_OP1_escolhida;
+      aux_escolha_task = 0;
+      aux_escolha_IN1 = 0;
+      aux_escolha_IN2 = 0;
+      aux_escolha_OP1 = 1;
+      aux_escolha_OP2 = 0;
+      aux_escolha_OK = 0;
+      break;
+    case 5:
+      Serial.print("Config_OP2: ");
+      menu_operacoes = aux_OP2_escolhida;
+      aux_escolha_task = 0;
+      aux_escolha_IN1 = 0;
+      aux_escolha_IN2 = 0;
+      aux_escolha_OP1 = 0;
+      aux_escolha_OP2 = 1;
+      aux_escolha_OK = 0;
+      break;
     case 6:
-              Serial.print("Pressione OK para enviar a lógica.");
-              menu_operacoes = 0;
-              aux_escolha_task = 0;
-              aux_escolha_IN1 = 0;
-              aux_escolha_IN2 = 0;
-              aux_escolha_OP1 = 0; 
-              aux_escolha_OP2 = 0;
-              aux_escolha_OK = 1;                                                      
-              break;
+      Serial.print("Pressione OK para enviar a lógica.");
+      menu_operacoes = 0;
+      aux_escolha_task = 0;
+      aux_escolha_IN1 = 0;
+      aux_escolha_IN2 = 0;
+      aux_escolha_OP1 = 0;
+      aux_escolha_OP2 = 0;
+      aux_escolha_OK = 1;
+      break;
     }
     // =====================================================================
 
     // --- Mostra as opções para entrada --- ===============================
-    if(aux_escolha_IN1 || aux_escolha_IN2)
+    if (aux_escolha_IN1 || aux_escolha_IN2)
+    {
+      switch (menu_entradas)
       {
-      switch(menu_entradas)
-        {
-          case 1:
-                  Serial.println("Nada");                                                     
-                  break;
-          case 2:
-                  Serial.println("IN1");                                                      
-                  break;
-          case 3:
-                  Serial.println("IN2");                                                      
-                  break;
-          case 4:
-                  Serial.println("IN3");                                                      
-                  break;
-          case 5:
-                  Serial.println("IN4");                                                      
-                  break;
-          case 6:
-                  Serial.println("ANALOG_IN1");
-                  break;
-        }
+      case 1:
+        Serial.println("Nada");
+        break;
+      case 2:
+        Serial.println("IN1");
+        break;
+      case 3:
+        Serial.println("IN2");
+        break;
+      case 4:
+        Serial.println("IN3");
+        break;
+      case 5:
+        Serial.println("IN4");
+        break;
+      case 6:
+        Serial.println("ANALOG_IN1");
+        break;
       }
+    }
     // =====================================================================
 
     // --- Mostra as opções para operações --- =============================
-    if(aux_escolha_OP1 || aux_escolha_OP2)
+    if (aux_escolha_OP1 || aux_escolha_OP2)
+    {
+      switch (menu_operacoes)
       {
-      switch(menu_operacoes)
-        {
-          case 1:
-                  Serial.println("Nada");                                                     
-                  break;
-          case 2:
-                  Serial.println("AND");                                                      
-                  break;
-          case 3:
-                  Serial.println("OR");                                                      
-                  break;
-          case 4:
-                  Serial.println("NOT");                                                 
-                  break;
-          case 5:
-                  Serial.println("DELAY");                                                      
-                  break;
-        }
+      case 1:
+        Serial.println("Nada");
+        break;
+      case 2:
+        Serial.println("AND");
+        break;
+      case 3:
+        Serial.println("OR");
+        break;
+      case 4:
+        Serial.println("NOT");
+        break;
+      case 5:
+        Serial.println("DELAY");
+        break;
       }
+    }
     // =====================================================================
 
     // --- Ajusta tempo de delay---
-    if(menu_operacoes == 5)
+    if (menu_operacoes == 5)
     {
-    int valor = analogRead(a_in_01);
-    int valor_tempo = map(valor, valorMinimo, valorMaximo, valorMinimoMapeado, valorMaximoMapeado);
+      int valor = analogRead(a_in_01);
+      int valor_tempo = map(valor, valorMinimo, valorMaximo, valorMinimoMapeado, valorMaximoMapeado);
     }
 
     // --- Ajusta Threshold ---
-    if(menu_entradas == 6)
+    if (menu_entradas == 6)
     {
-    int valor_Threshold = analogRead(a_in_01);
-    float valor_Map_threshold = map(valor_Threshold, valor_minimo_threshold, valor_maximo_threshold, valor_minimo_map_threshold, valor_maximo_map_threshold) / 1000.0;
-
+      int valor_Threshold = analogRead(a_in_01);
+      float valor_Map_threshold = map(valor_Threshold, valor_minimo_threshold, valor_maximo_threshold, valor_minimo_map_threshold, valor_maximo_map_threshold) / 1000.0;
     }
-
 
     /*//Variável para a fila 1 se "aux_task_escolhida == 1"
     //  -aux_IN1_escolhida
@@ -389,212 +389,968 @@ void task_ihm_btn_display(void*parametro)
         -valor_Map_threshold
 
     */
-    //xQueueSendToBack(integerQueue1, &valor_Map_threshold, 0);
-    if(enviando_valores)
+    // xQueueSendToBack(integerQueue1, &valor_Map_threshold, 0);
+    if (enviando_valores)
     {
       int tamanho_fila = 4;
       int valores[] = {aux_IN1_escolhida, aux_IN2_escolhida, aux_OP1_escolhida, aux_OP2_escolhida};
 
-      for (int i = 0; i < tamanho_fila; i++) 
+      for (int i = 0; i < tamanho_fila; i++)
       {
-        if(aux_task_escolhida == 1)
+        if (aux_task_escolhida == 1)
         {
           xQueueSend(integerQueue1, &valores[i], portMAX_DELAY);
-          vTaskDelay(pdMS_TO_TICKS(100)); // Atraso de 1 segundo entre cada envio
+          vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
         }
 
-        if(aux_task_escolhida == 2)
+        if (aux_task_escolhida == 2)
         {
           xQueueSend(integerQueue2, &valores[i], portMAX_DELAY);
           vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
         }
 
-        if(aux_task_escolhida == 3)
+        if (aux_task_escolhida == 3)
         {
           xQueueSend(integerQueue3, &valores[i], portMAX_DELAY);
           vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
         }
 
-        if(aux_task_escolhida == 4)
+        if (aux_task_escolhida == 4)
         {
           xQueueSend(integerQueue4, &valores[i], portMAX_DELAY);
           vTaskDelay(pdMS_TO_TICKS(1000)); // Atraso de 1 segundo entre cada envio
         }
       }
       // --- Encerra o envio dos dados --- ==============================================
-      enviando_valores      = 0;
+      enviando_valores = 0;
       //=================================================================================
 
       // --- Retorna a configuração original para a lógica --- ==========================
-      aux_task_escolhida    = 1;
-      aux_IN1_escolhida     = 1;
-      aux_IN2_escolhida     = 1;
-      aux_OP1_escolhida     = 1;
-      aux_OP2_escolhida     = 1;
+      aux_task_escolhida = 1;
+      aux_IN1_escolhida = 1;
+      aux_IN2_escolhida = 1;
+      aux_OP1_escolhida = 1;
+      aux_OP2_escolhida = 1;
       //=================================================================================
     }
 
-    xSemaphoreTake(xMutex1,portMAX_DELAY);
+    xSemaphoreTake(xMutex1, portMAX_DELAY);
+    Serial.println(aux_volat_IN1_task1);
+    if (digitalRead(in_01))
+    {
+      aux_volat_IN1_task1 = 1;
+    }
+    else
+    {
+      aux_volat_IN1_task1 = 0;
+    }
 
-    if(digitalRead(in_01))
-      {
-        aux_volat_IN1_task1 = 1;
-      }
-      else
-        {
-          aux_volat_IN1_task1 = 0;
-        }
+    if (digitalRead(in_02))
+    {
+      aux_volat_IN2_task1 = 1;
+    }
+    else
+    {
+      aux_volat_IN2_task1 = 0;
+    }
 
-    if(digitalRead(in_02))
-      {
-        aux_volat_IN2_task1 = 1;
-      }
-      else
-        {
-          aux_volat_IN2_task1 = 0;
-        }
+    if (digitalRead(in_03))
+    {
+      aux_volat_IN3_task1 = 1;
+    }
+    else
+    {
+      aux_volat_IN3_task1 = 0;
+    }
 
-    if(digitalRead(in_03))
-      {
-        aux_volat_IN3_task1 = 1;
-      }
-      else
-        {
-          aux_volat_IN3_task1 = 0;
-        }
-
-    if(digitalRead(in_04))
-      {
-        aux_volat_IN4_task1 = 1;
-      }
-      else
-        {
-          aux_volat_IN4_task1 = 0;
-        }
+    if (digitalRead(in_04))
+    {
+      aux_volat_IN4_task1 = 1;
+    }
+    else
+    {
+      aux_volat_IN4_task1 = 0;
+    }
 
     valor_analogica = analogRead(a_in_01);
-    aux_volat_a0_task1 = ((valor_analogica/4095.0)*3.3);
-    
+    aux_volat_a0_task1 = ((valor_analogica / 4095.0) * 3.3);
+
     xSemaphoreGive(xMutex1);
 
     delay(500);
   }
 }
 
-void task_logica1(void*parametro)
-{  
-  while(1)
+void task_logica1(void *parametro)
+{
+  while (1)
   {
-    xSemaphoreTake(xMutex1,portMAX_DELAY);
+    /*int receiveValue;
+    if(xQueueReceive(integerQueue1, &receiveValue, portMAX_DELAY))
+    {
+      Serial.print(receiveValue);
+      if(receiveValue)
+    }*/
 
-    //Teste leitura entrada IN1 pela task
-    if(aux_volat_IN1_task1)
-      {
-        Serial.println("Mutex");
-        //Serial.println(valor1);
-      }                         
-    
-    xSemaphoreGive(xMutex1);
-
-    int aux1,
+    int valorRecebido,
+        aux1,
         aux2,
         aux3,
         aux4;
 
     int tamanho_fila = 4;
-    
-      int valoresRecebidos[4];
-
-    if (uxQueueMessagesWaiting(integerQueue1) > 0)
+    int valor1 = 0;
+    int valores_recebidos[] = {aux1, aux2, aux3, aux4};
+    for (int i = 0; i < tamanho_fila; i++)
     {
-      for (int i = 0; i < tamanho_fila; i++)
-        {      
-        int valorRecebido;
+      if (xQueueReceive(integerQueue1, &valorRecebido, portMAX_DELAY))
+      {
+        valores_recebidos[i] = valorRecebido;
+        // Processar o valor recebido
+        printf("Valor recebido: %d\n", valorRecebido);
+      }
+    }
 
-          xQueueReceive(integerQueue1, &valorRecebido, pdMS_TO_TICKS(1000));
-          valoresRecebidos[i] = valorRecebido;        
+    int tsk1_in_1 = valores_recebidos[0];
+    int tsk1_in_2 = valores_recebidos[1];
+    int tsk1_op_1 = valores_recebidos[2];
+    int tsk1_op_2 = valores_recebidos[3];
+    int out_parcial = 0;
+
+    // Verifica se a variável 1 está como NADA e se a variável 2 tem algum valor
+    if (tsk1_in_1 == 1 && tsk1_in_2 != 1)
+    {
+      tsk1_in_1 = tsk1_in_2;
+      tsk1_in_2 = 1;
+    }
+    // Verifica se a operação 1 está como NADA e se a operação 2 tem algum valor
+    if (tsk1_op_1 == 1 && tsk1_op_2 != 1)
+    {
+      tsk1_op_1 = tsk1_op_2;
+      tsk1_op_2 = 1;
+    }
+
+    // Caso ambas as operações sejam NADA
+    if (tsk_op_1 == 1 && tsk_op_2 == 1)
+    {
+      // Caso ambas entradas sejam NADA
+      if (tsk1_in_1 == 1 && tsk2_in_1 == 1)
+      {
+        out_01 = 0;
+      }
+      // Caso uma entrada esteja setada
+      if ((tsk1_in_1 == 2 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 2))
+      {
+        out_01 = in_01;
+      }
+      if ((tsk1_in_1 == 3 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 3))
+      {
+        out_01 = in_02;
+      }
+      if ((tsk1_in_1 == 4 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 4))
+      {
+        out_01 = in_03;
+      }
+      if ((tsk1_in_1 == 5 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 5))
+      {
+        out_01 = in_04;
+      }
+      if ((tsk1_in_1 == 6 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 6))
+      {
+        out_01 = a_in_01;
+      }
+    }
+
+    // Caso OPERAÇÃO 1 SEJA AND (código 2) e OPERAÇÃO 2 seja NADA, ambos os inputs devem ser != de NADA
+    if (tsk_op_1 == 2 && tsk_op_2 == 1)
+    {
+      // Caso a entrada 1 e 2 sejam as mesmas
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+      {
+        out_01 = in_01 && in_01;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+      {
+        out_01 = in_02 && in_02;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+      {
+        out_01 = in_03 && in_03;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+      {
+        out_01 = in_04 && in_04;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+      {
+        out_01 = a_in_01 && a_in_01;
+      }
+      // Casos onde as entradas são diferentes
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+      {
+        out_01 = in_01 && in_02;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+      {
+        out_01 = in_01 && in_03;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+      {
+        out_01 = in_01 && in_04;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+      {
+        out_01 = in_01 && a_in_01;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+      {
+        out_01 = in_02 && in_03;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+      {
+        out_01 = in_02 && in_03;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+      {
+        out_01 = in_02 && in_04;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+      {
+        out_01 = in_02 && a_in_01;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+      {
+        out_01 = in_03 && in_01;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+      {
+        out_01 = in_03 && in_02;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+      {
+        out_01 = in_03 && in_04;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+      {
+        out_01 = in_03 && a_in_01;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+      {
+        out_01 = in_04 && in_01;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+      {
+        out_01 = in_04 && in_02;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+      {
+        out_01 = in_04 && in_03;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+      {
+        out_01 = in_04 && a_in_01;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+      {
+        out_01 = a_in_01 && in_01;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+      {
+        out_01 = a_in_01 && in_02;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+      {
+        out_01 = a_in_01 && in_03;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+      {
+        out_01 = a_in_01 && in_04;
+      }
+    }
+
+    // Caso OPERAÇÃO 1 SEJA OR (código 3) e OPERAÇÃO 2 seja NADA, ambos os inputs devem ser != de NADA
+    if (tsk_op_1 == 3 && tsk_op_2 == 1)
+    {
+      // Caso a entrada 1 e 2 sejam as mesmas
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+      {
+        out_01 = in_01 || in_01;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+      {
+        out_01 = in_02 || in_02;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+      {
+        out_01 = in_03 || in_03;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+      {
+        out_01 = in_04 || in_04;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+      {
+        out_01 = a_in_01 || a_in_01;
+      }
+      // Casos onde as entradas são diferentes
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+      {
+        out_01 = in_01 || in_02;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+      {
+        out_01 = in_01 || in_03;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+      {
+        out_01 = in_01 || in_04;
+      }
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+      {
+        out_01 = in_01 || a_in_01;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+      {
+        out_01 = in_02 || in_03;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+      {
+        out_01 = in_02 || in_03;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+      {
+        out_01 = in_02 || in_04;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+      {
+        out_01 = in_02 || a_in_01;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+      {
+        out_01 = in_03 || in_01;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+      {
+        out_01 = in_03 || in_02;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+      {
+        out_01 = in_03 || in_04;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+      {
+        out_01 = in_03 || a_in_01;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+      {
+        out_01 = in_04 || in_01;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+      {
+        out_01 = in_04 || in_02;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+      {
+        out_01 = in_04 || in_03;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+      {
+        out_01 = in_04 || a_in_01;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+      {
+        out_01 = a_in_01 || in_01;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+      {
+        out_01 = a_in_01 || in_02;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+      {
+        out_01 = a_in_01 || in_03;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+      {
+        out_01 = a_in_01 || in_04;
+      }
+    }
+
+    // Caso OPERAÇÃO 1 SEJA NOT (código 4) e OPERAÇÃO 2 seja NADA, apenas uma entrada pode estar selecionada
+    if (tsk_op_1 == 4 && tsk_op_2 == 1)
+    {
+      // Caso a operação seja direto com a entrada
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 1)
+      {
+        out_01 = !(in_01);
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 1)
+      {
+        out_01 = !(in_02);
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 1)
+      {
+        out_01 = !(in_03);
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 1)
+      {
+        out_01 = !(in_04);
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 1)
+      {
+        out_01 = !(a_in_01);
+      }
+    }
+
+    // Caso OPERAÇÃO 1 SEJA DELAY (código 5) e OPERAÇÃO 2 seja NADA, apenas uma entrada pode estar selecionada
+    if (tsk_op_1 == 5 && tsk_op_2 == 1)
+    {
+      // Caso a operação seja direto com a entrada
+      if (tsk1_in_1 == 2 && tsk1_in_2 == 1)
+      {
+        delay(1000);
+        out_01 = in_01;
+      }
+      if (tsk1_in_1 == 3 && tsk1_in_2 == 1)
+      {
+        delay(1000);
+        out_01 = in_02;
+      }
+      if (tsk1_in_1 == 4 && tsk1_in_2 == 1)
+      {
+        delay(1000);
+        out_01 = in_03;
+      }
+      if (tsk1_in_1 == 5 && tsk1_in_2 == 1)
+      {
+        delay(1000);
+        out_01 = in_04;
+      }
+      if (tsk1_in_1 == 6 && tsk1_in_2 == 1)
+      {
+        delay(1000);
+        out_01 = a_in_01;
+      }
+    }
+
+    // Casos com duas operações
+    // Verifica se tem 2 entradas e se tem duas operações
+    if (tsk1_op_1 != 1 && tsk1_op_2 != 1 && tsk1_in_1 != 1 && tsk1_in_2 != 1)
+    {
+
+      // Caso OPERAÇÃO 1 SEJA AND (código 2) e OPERAÇÃO 2 seja NOT (código 4), ambos os inputs devem ser != de NADA
+      if (tsk_op_1 == 2 && tsk_op_2 == 4)
+      {
+        // Caso a entrada 1 e 2 sejam as mesmas
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_01 && in_01;
         }
-    }    
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_02 && in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_03 && in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_04 && in_04;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+        {
+          out_parcial = a_in_01 && a_in_01;
+        }
+        // Casos onde as entradas são diferentes
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_01 && in_02;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_01 && in_03;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_01 && in_04;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_01 && a_in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_02 && in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_02 && in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_02 && in_04;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_02 && a_in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_03 && in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_03 && in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_03 && in_04;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_03 && a_in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_04 && in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_04 && in_02;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_04 && in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_04 && a_in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+        {
+          out_parcial = a_in_01 && in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+        {
+          out_parcial = a_in_01 && in_02;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+        {
+          out_parcial = a_in_01 && in_03;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+        {
+          out_parcial = a_in_01 && in_04;
+        }
+        out_01 = !(out_parcial);
+      }
 
-    
-    Serial.print("Valor recebido1: ");
-    Serial.println(valoresRecebidos[0]);
-    Serial.print("Valor recebido2: ");
-    Serial.println(valoresRecebidos[1]);
-    Serial.print("Valor recebido3: ");
-    Serial.println(valoresRecebidos[2]);
-    Serial.print("Valor recebido4: ");
-    Serial.println(valoresRecebidos[3]);
-    
+      // Caso OPERAÇÃO 1 SEJA OR (código 3) e OPERAÇÃO 2 seja NOT (código 4), ambos os inputs devem ser != de NADA
+      if (tsk_op_1 == 2 && tsk_op_2 == 4)
+      {
+        // Caso a entrada 1 e 2 sejam as mesmas
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_01 || in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_02 || in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_03 || in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_04 || in_04;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+        {
+          out_parcial = a_in_01 || a_in_01;
+        }
+        // Casos onde as entradas são diferentes
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_01 || in_02;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_01 || in_03;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_01 || in_04;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_01 || a_in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_02 || in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_02 || in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_02 || in_04;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_02 || a_in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_03 || in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_03 || in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_03 || in_04;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_03 || a_in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_04 || in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_04 || in_02;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_04 || in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_04 || a_in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+        {
+          out_parcial = a_in_01 || in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+        {
+          out_parcial = a_in_01 || in_02;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+        {
+          out_parcial = a_in_01 || in_03;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+        {
+          out_parcial = a_in_01 || in_04;
+        }
+        out_01 = !(out_parcial);
+      }
+      // Caso OPERAÇÃO 1 SEJA AND (código 2) e OPERAÇÃO 2 seja DELAY (código 5), ambos os inputs devem ser != de NADA
+      if (tsk_op_1 == 2 && tsk_op_2 == 4)
+      {
+        // Caso a entrada 1 e 2 sejam as mesmas
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_01 && in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_02 && in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_03 && in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_04 && in_04;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+        {
+          out_parcial = a_in_01 && a_in_01;
+        }
+        // Casos onde as entradas são diferentes
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_01 && in_02;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_01 && in_03;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_01 && in_04;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_01 && a_in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_02 && in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_02 && in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_02 && in_04;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_02 && a_in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_03 && in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_03 && in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_03 && in_04;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_03 && a_in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_04 && in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_04 && in_02;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_04 && in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_04 && a_in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+        {
+          out_parcial = a_in_01 && in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+        {
+          out_parcial = a_in_01 && in_02;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+        {
+          out_parcial = a_in_01 && in_03;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+        {
+          out_parcial = a_in_01 && in_04;
+        }
+        delay(1000);
+        out_01 = out_parcial;
+      }
+
+      // Caso OPERAÇÃO 1 SEJA OR (código 3) e OPERAÇÃO 2 seja DELAY (código 5), ambos os inputs devem ser != de NADA
+      if (tsk_op_1 == 2 && tsk_op_2 == 4)
+      {
+        // Caso a entrada 1 e 2 sejam as mesmas
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_01 || in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_02 || in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_03 || in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_04 || in_04;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
+        {
+          out_parcial = a_in_01 || a_in_01;
+        }
+        // Casos onde as entradas são diferentes
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_01 || in_02;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_01 || in_03;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_01 || in_04;
+        }
+        if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_01 || a_in_01;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_02 || in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_02 || in_03;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_02 || in_04;
+        }
+        if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_02 || a_in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_03 || in_01;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_03 || in_02;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
+        {
+          out_parcial = in_03 || in_04;
+        }
+        if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_03 || a_in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
+        {
+          out_parcial = in_04 || in_01;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
+        {
+          out_parcial = in_04 || in_02;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
+        {
+          out_parcial = in_04 || in_03;
+        }
+        if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
+        {
+          out_parcial = in_04 || a_in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
+        {
+          out_parcial = a_in_01 || in_01;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
+        {
+          out_parcial = a_in_01 || in_02;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
+        {
+          out_parcial = a_in_01 || in_03;
+        }
+        if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
+        {
+          out_parcial = a_in_01 || in_04;
+        }
+        delay(1000);
+        out_01 = out_parcial;
+      }
+    }
+
+    xSemaphoreTake(xMutex1, portMAX_DELAY);
+
+    // Teste leitura entrada IN1 pela task
+    if (aux_volat_IN1_task1)
+    {
+      Serial.println("Mutex");
+      // Serial.println(valor1);
+    }
+
+    xSemaphoreGive(xMutex1);
+
     delay(500);
   }
 }
 
-void task_logica2(void*parametro)
-{  
-  while(1)
+void task_logica2(void *parametro)
+{
+  while (1)
   {
-    
+
     int valorRecebido;
-    if (xQueueReceive(integerQueue2, &valorRecebido, pdMS_TO_TICKS(100))) {
-            // Processar o valor recebido
-            printf("Valor recebido: %d\n", valorRecebido);
-        }
-   
+    if (xQueueReceive(integerQueue2, &valorRecebido, portMAX_DELAY))
+    {
+      // Processar o valor recebido
+      printf("Valor recebido: %d\n", valorRecebido);
+    }
 
     delay(500);
   }
 }
 
-void task_logica3(void*parametro)
-{  
-  while(1)
+void task_logica3(void *parametro)
+{
+  while (1)
   {
-    
+
     int valorRecebido;
-    if (xQueueReceive(integerQueue3, &valorRecebido, pdMS_TO_TICKS(100))) {
-            // Processar o valor recebido
-            printf("Valor recebido: %d\n", valorRecebido);
-        }
-   
+    if (xQueueReceive(integerQueue3, &valorRecebido, portMAX_DELAY))
+    {
+      // Processar o valor recebido
+      printf("Valor recebido: %d\n", valorRecebido);
+    }
 
     delay(500);
   }
 }
 
-void task_logica4(void*parametro)
-{  
-  while(1)
+void task_logica4(void *parametro)
+{
+  while (1)
   {
-    
+
     int valorRecebido;
-    if (xQueueReceive(integerQueue4, &valorRecebido, pdMS_TO_TICKS(100))) {
-            // Processar o valor recebido
-            printf("Valor recebido: %d\n", valorRecebido);
-        }
-   
+    if (xQueueReceive(integerQueue4, &valorRecebido, portMAX_DELAY))
+    {
+      // Processar o valor recebido
+      printf("Valor recebido: %d\n", valorRecebido);
+    }
 
     delay(500);
   }
 }
 
-void setup() 
+void setup()
 {
 
-//==========================================================================
-  pinMode(bt_pp, INPUT_PULLUP);                                                       
-  pinMode(bt_mm, INPUT_PULLUP);                                                       
-  pinMode(bt_ok, INPUT_PULLUP);                                               
+  //==========================================================================
+  pinMode(bt_pp, INPUT_PULLUP);
+  pinMode(bt_mm, INPUT_PULLUP);
+  pinMode(bt_ok, INPUT_PULLUP);
 
   pinMode(in_01, INPUT_PULLUP);
-  pinMode(in_02, INPUT_PULLUP);  
-  pinMode(in_03, INPUT_PULLUP);  
+  pinMode(in_02, INPUT_PULLUP);
+  pinMode(in_03, INPUT_PULLUP);
   pinMode(in_04, INPUT_PULLUP);
   pinMode(a_in_01, INPUT);
 
   pinMode(out_01, OUTPUT);
-  pinMode(out_02, OUTPUT);  
-  pinMode(out_03, OUTPUT);  
+  pinMode(out_02, OUTPUT);
+  pinMode(out_03, OUTPUT);
   pinMode(out_04, OUTPUT);
 
   Serial.begin(115200);
@@ -606,84 +1362,83 @@ void setup()
   xMutex4 = xSemaphoreCreateMutex();
   xMutex5 = xSemaphoreCreateMutex();
 
-// --- Criação das filas ---================================================
-  integerQueue1 = xQueueCreate(10, // Queue length
-                              sizeof(int) // Queue item size
-                              );
-  integerQueue2 = xQueueCreate(10, // Queue length
-                              sizeof(int) // Queue item size
-                              );
-  integerQueue3 = xQueueCreate(10, // Queue length
-                              sizeof(int) // Queue item size
-                              );
-  integerQueue4 = xQueueCreate(10, // Queue length
-                              sizeof(int) // Queue item size
-                              );
-//==========================================================================
+  // --- Criação das filas ---================================================
+  integerQueue1 = xQueueCreate(10,         // Queue length
+                               sizeof(int) // Queue item size
+  );
+  integerQueue2 = xQueueCreate(10,         // Queue length
+                               sizeof(int) // Queue item size
+  );
+  integerQueue3 = xQueueCreate(10,         // Queue length
+                               sizeof(int) // Queue item size
+  );
+  integerQueue4 = xQueueCreate(10,         // Queue length
+                               sizeof(int) // Queue item size
+  );
+  //==========================================================================
 
   // --- Cria tarefa 1 - Tarefa display e leitura de botões --- ============
   xTaskCreatePinnedToCore(
-              task_ihm_btn_display,   //Tarefa
-              "task_ihm_btn_display", //Nome da tarefa
-              10000,      //Tamanho da pilha
-              NULL,       //Parâmetro de entrada não passa nada
-              3,          //Prioridade
-              NULL,
-              0        //Identificador da tarefa
-              );
-//==========================================================================
+      task_ihm_btn_display,   // Tarefa
+      "task_ihm_btn_display", // Nome da tarefa
+      10000,                  // Tamanho da pilha
+      NULL,                   // Parâmetro de entrada não passa nada
+      3,                      // Prioridade
+      NULL,
+      0 // Identificador da tarefa
+  );
+  //==========================================================================
 
   // --- Cria tarefa 1 - Tarefa da lógica 1 --- ============================
   xTaskCreatePinnedToCore(
-              task_logica1,   //Tarefa
-              "task_logica1", //Nome da tarefa
-              10000,      //Tamanho da pilha
-              NULL,       //Parâmetro de entrada não passa nada
-              5,          //Prioridade
-              NULL,
-              0        //Identificador da tarefa
-              );
-//==========================================================================
-  
+      task_logica1,   // Tarefa
+      "task_logica1", // Nome da tarefa
+      10000,          // Tamanho da pilha
+      NULL,           // Parâmetro de entrada não passa nada
+      5,              // Prioridade
+      NULL,
+      0 // Identificador da tarefa
+  );
+  //==========================================================================
+
   // --- Cria tarefa 2 - Tarefa da lógica 2 --- ============================
   xTaskCreatePinnedToCore(
-              task_logica2,   //Tarefa
-              "task_logica2", //Nome da tarefa
-              10000,      //Tamanho da pilha
-              NULL,       //Parâmetro de entrada não passa nada
-              5,          //Prioridade
-              NULL,
-              0        //Identificador da tarefa
-              );
-//==========================================================================
+      task_logica2,   // Tarefa
+      "task_logica2", // Nome da tarefa
+      10000,          // Tamanho da pilha
+      NULL,           // Parâmetro de entrada não passa nada
+      5,              // Prioridade
+      NULL,
+      0 // Identificador da tarefa
+  );
+  //==========================================================================
 
   // --- Cria tarefa 3 - Tarefa da lógica 3 --- ============================
   xTaskCreatePinnedToCore(
-              task_logica3,   //Tarefa
-              "task_logica3", //Nome da tarefa
-              10000,      //Tamanho da pilha
-              NULL,       //Parâmetro de entrada não passa nada
-              5,          //Prioridade
-              NULL,
-              0        //Identificador da tarefa
-              );
-//==========================================================================
-  
-  // --- Cria tarefa 4 - Tarefa da lógica 4 --- ============================
-  xTaskCreatePinnedToCore(
-              task_logica4,   //Tarefa
-              "task_logica4", //Nome da tarefa
-              10000,      //Tamanho da pilha
-              NULL,       //Parâmetro de entrada não passa nada
-              5,          //Prioridade
-              NULL,
-              0        //Identificador da tarefa
-              );
+      task_logica3,   // Tarefa
+      "task_logica3", // Nome da tarefa
+      10000,          // Tamanho da pilha
+      NULL,           // Parâmetro de entrada não passa nada
+      5,              // Prioridade
+      NULL,
+      0 // Identificador da tarefa
+  );
   //==========================================================================
 
+  // --- Cria tarefa 4 - Tarefa da lógica 4 --- ============================
+  xTaskCreatePinnedToCore(
+      task_logica4,   // Tarefa
+      "task_logica4", // Nome da tarefa
+      10000,          // Tamanho da pilha
+      NULL,           // Parâmetro de entrada não passa nada
+      5,              // Prioridade
+      NULL,
+      0 // Identificador da tarefa
+  );
+  //==========================================================================
 }
 
 // the loop function runs over and over again forever
-void loop() 
-{ 
+void loop()
+{
 }
