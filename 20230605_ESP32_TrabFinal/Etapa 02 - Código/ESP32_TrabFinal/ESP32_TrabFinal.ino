@@ -567,8 +567,10 @@ void task_logica1(void *parametro)
         aux_IN2,
         aux_IN3,
         aux_IN4,
-        aux_ANALOG_INT,
-        aux_OUT;
+        aux_ANALOG_INT;
+    
+    bool aux_OUT;
+    
     float aux_AN_IN1;
 
     while (1)
@@ -605,8 +607,10 @@ void task_logica1(void *parametro)
                 valores_recebidos_task1[i] = valor_recebido_task1;
             }
         }
-        /*
-        Serial.print("Task1_1: ");
+
+        delay(500);
+        
+       /* Serial.print("Task1_1: ");
         Serial.println(valores_recebidos_task1[0]);
         Serial.print("Task1_2: ");
         Serial.println(valores_recebidos_task1[1]);
@@ -620,70 +624,91 @@ void task_logica1(void *parametro)
         Serial.println(valores_recebidos_task1[5]);
         Serial.println(receive_analog_task1);*/
 
-        delay(500);
-
         int tsk1_in_1 = valores_recebidos_task1[0];
         int tsk1_in_2 = valores_recebidos_task1[1];
         int tsk1_op_1 = valores_recebidos_task1[2];
         int tsk1_op_2 = valores_recebidos_task1[3];
         int tsk1_op_delay = valores_recebidos_task1[4];
         receive_analog_task1 = valores_recebidos_task1[5] / 1000.0;
-        int out_parcial = 0;
+        bool out_parcial;
+
+        if(tsk1_in_1 == 0 && tsk1_in_2 == 0 && tsk1_op_1 == 0 && tsk1_op_2 == 0){
+          aux_OUT = 0;
+        }
+
+        
+/*
+        Serial.print("Task1_IN1: ");
+        Serial.println(tsk1_in_1);
+        Serial.print("Task1_IN2: ");
+        Serial.println(tsk1_in_2);
+        Serial.print("Task1_OP1: ");
+        Serial.println(tsk1_op_1);
+        Serial.print("Task1_OP2: ");
+        Serial.println(tsk1_op_2);
+        Serial.print("Task1_DELAY: ");
+        Serial.println(tsk1_op_delay);
+        Serial.print("Task1_ANALOG: ");
+        Serial.println(receive_analog_task1);
+        Serial.printf("\n PARCIAL1: %d\n", out_parcial);
+        Serial.printf("\n OUT1L: %d\n", aux_OUT);*/
+        
 
         if (aux_AN_IN1 > receive_analog_task1)
         {
-            aux_ANALOG_INT = 1;
+          aux_ANALOG_INT = 1;
         }
-        else
-        {
+          else
+          {
             aux_ANALOG_INT = 0;
-        }
+          }
 
         // Verifica se a variável 1 está como NADA e se a variável 2 tem algum valor
-        if (tsk1_in_1 == 1 && tsk1_in_2 != 1)
+        /*if (tsk1_in_1 == 1 && tsk1_in_2 != 1)
         {
-            tsk1_in_1 = tsk1_in_2;
-            tsk1_in_2 = 1;
-        }
+          tsk1_in_1 = tsk1_in_2;
+          tsk1_in_2 = 1;
+        }*/
         // Verifica se a operação 1 está como NADA e se a operação 2 tem algum valor
-        if (tsk1_op_1 == 1 && tsk1_op_2 != 1)
+        /*if (tsk1_op_1 == 1 && tsk1_op_2 != 1)
         {
-            tsk1_op_1 = tsk1_op_2;
-            tsk1_op_2 = 1;
-        }
+          tsk1_op_1 = tsk1_op_2;
+          tsk1_op_2 = 1;
+        }*/
 
         // Caso ambas as operações sejam NADA
         if (tsk1_op_1 == 1 && tsk1_op_2 == 1)
         {
-            // Caso ambas entradas sejam NADA
-            if (tsk1_in_1 == 1 && tsk1_in_2 == 1)
-            {
-                aux_OUT = 0;
-            }
+          // Caso ambas entradas sejam NADA
+          if (tsk1_in_1 == 1 && tsk1_in_2 == 1)
+          {
+            aux_OUT = 0;
+          }
             // Caso uma entrada esteja setada
-            if ((tsk1_in_1 == 2 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 2))
-            {
-                aux_OUT = aux_IN1;
-            }
-            if ((tsk1_in_1 == 3 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 3))
-            {
-                aux_OUT = aux_IN2;
-            }
-            if ((tsk1_in_1 == 4 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 4))
-            {
-                aux_OUT = aux_IN3;
-            }
-            if ((tsk1_in_1 == 5 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 5))
-            {
-                aux_OUT = aux_IN4;
-            }
-            if ((tsk1_in_1 == 6 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 6))
-            {
-                aux_OUT = aux_ANALOG_INT;
-            }
-            digitalWrite(out_01, aux_OUT);
+          if ((tsk1_in_1 == 2 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 2))
+          {
+            aux_OUT = aux_IN1;
+          }
+          if ((tsk1_in_1 == 3 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 3))
+          {
+            aux_OUT = aux_IN2;
+          }
+          if ((tsk1_in_1 == 4 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 4))
+          {
+            aux_OUT = aux_IN3;
+          }
+          if ((tsk1_in_1 == 5 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 5))
+          {
+            aux_OUT = aux_IN4;
+          }
+          if ((tsk1_in_1 == 6 && tsk1_in_2 == 1) || (tsk1_in_1 == 1 && tsk1_in_2 == 6))
+          {
+            aux_OUT = aux_ANALOG_INT;
+          }
+          digitalWrite(out_01, aux_OUT);
         }
 
+//============================================================================================================================
         // Caso OPERAÇÃO 1 SEJA AND (código 2) e OPERAÇÃO 2 seja NADA, ambos os inputs devem ser != de NADA
         if (tsk1_op_1 == 2 && tsk1_op_2 == 1)
         {
@@ -713,195 +738,201 @@ void task_logica1(void *parametro)
             // Casos onde as entradas são diferentes
             if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
             {
-                aux_OUT = aux_IN1 && aux_IN2; 
+                aux_OUT = (aux_IN1 && aux_IN2); 
             }
             if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
             {
-                aux_OUT = aux_IN1 && aux_IN3;
+                aux_OUT = (aux_IN1 && aux_IN3);
             }
             if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
             {
-                aux_OUT = aux_IN1 && aux_IN4;
+                aux_OUT = (aux_IN1 && aux_IN4);
             }
             if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
             {
-                aux_OUT = aux_IN1 && aux_ANALOG_INT;
+                aux_OUT = (aux_IN1 && aux_ANALOG_INT);
             }
             if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
             {
-                aux_OUT = aux_IN2 && aux_IN3;
+                aux_OUT = (aux_IN2 && aux_IN3);
             }
             if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
             {
-                aux_OUT = aux_IN2 && aux_IN3;
+                aux_OUT = (aux_IN2 && aux_IN3);
             }
             if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
             {
-                aux_OUT = aux_IN2 && aux_IN4;
+                aux_OUT = (aux_IN2 && aux_IN4);
             }
             if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
             {
-                aux_OUT = aux_IN2 && aux_ANALOG_INT;
+                aux_OUT = (aux_IN2 && aux_ANALOG_INT);
             }
             if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
             {
-                aux_OUT = aux_IN3 && aux_IN1;
+                aux_OUT = (aux_IN3 && aux_IN1);
             }
             if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
             {
-                aux_OUT = aux_IN3 && aux_IN2;
+                aux_OUT = (aux_IN3 && aux_IN2);
             }
             if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
             {
-                aux_OUT = aux_IN3 && aux_IN4;
+                aux_OUT = (aux_IN3 && aux_IN4);
             }
             if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
             {
-                aux_OUT = aux_IN3 && aux_ANALOG_INT;
+                aux_OUT = (aux_IN3 && aux_ANALOG_INT);
             }
             if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
             {
-                aux_OUT = aux_IN4 && aux_IN1;
+                aux_OUT = (aux_IN4 && aux_IN1);
             }
             if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
             {
-                aux_OUT = aux_IN4 && in_02;
+                aux_OUT = (aux_IN4 && aux_IN2);
             }
             if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
             {
-                aux_OUT = aux_IN4 && aux_IN3;
+                aux_OUT = (aux_IN4 && aux_IN3);
             }
             if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
             {
-                aux_OUT = aux_IN4 && aux_ANALOG_INT;
+                aux_OUT = (aux_IN4 && aux_ANALOG_INT);
             }
             if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
             {
-                aux_OUT = aux_ANALOG_INT && aux_IN1;
+                aux_OUT = (aux_ANALOG_INT && aux_IN1);
             }
             if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
             {
-                aux_OUT = aux_ANALOG_INT && aux_IN2;
+                aux_OUT = (aux_ANALOG_INT && aux_IN2);
             }
             if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
             {
-                aux_OUT = aux_ANALOG_INT && aux_IN3;
+                aux_OUT = (aux_ANALOG_INT && aux_IN3);
             }
             if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
             {
-                aux_OUT = aux_ANALOG_INT && aux_IN4;
+                aux_OUT = (aux_ANALOG_INT && aux_IN4);
             }
             digitalWrite(out_01, aux_OUT);
         }
+//============================================================================================================================
 
+
+//============================================================================================================================
         // Caso OPERAÇÃO 1 SEJA OR (código 3) e OPERAÇÃO 2 seja NADA, ambos os inputs devem ser != de NADA
         if (tsk1_op_1 == 3 && tsk1_op_2 == 1)
         {
             // Caso a entrada 1 e 2 sejam as mesmas
             if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
             {
-                aux_OUT = aux_IN1 || aux_IN1;
+                aux_OUT = (aux_IN1 || aux_IN1);
             }
             if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
             {
-                aux_OUT = aux_IN2 || aux_IN2;
+                aux_OUT = (aux_IN2 || aux_IN2);
             }
             if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
             {
-                aux_OUT = aux_IN3 || aux_IN3;
+                aux_OUT = (aux_IN3 || aux_IN3);
             }
             if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
             {
-                aux_OUT = aux_IN4 || aux_IN4;
+                aux_OUT = (aux_IN4 || aux_IN4);
             }
             if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
             {
-                aux_OUT = aux_ANALOG_INT || aux_ANALOG_INT;
+                aux_OUT = (aux_ANALOG_INT || aux_ANALOG_INT);
             }
             // Casos onde as entradas são diferentes
             if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
             {
-                aux_OUT = aux_IN1 || aux_IN2;
+                aux_OUT = (aux_IN1 || aux_IN2);
             }
             if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
             {
-                aux_OUT = aux_IN1 || aux_IN3;
+                aux_OUT = (aux_IN1 || aux_IN3);
             }
             if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
             {
-                aux_OUT = aux_IN1 || aux_IN4;
+                aux_OUT = (aux_IN1 || aux_IN4);
             }
             if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
             {
-                aux_OUT = aux_IN1 || aux_ANALOG_INT;
+                aux_OUT = (aux_IN1 || aux_ANALOG_INT);
             }
             if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
             {
-                aux_OUT = aux_IN2 || aux_IN3;
+                aux_OUT = (aux_IN2 || aux_IN3);
             }
             if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
             {
-                aux_OUT = aux_IN2 || aux_IN3;
+                aux_OUT = (aux_IN2 || aux_IN3);
             }
             if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
             {
-                aux_OUT = aux_IN2 || aux_IN4;
+                aux_OUT = (aux_IN2 || aux_IN4);
             }
             if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
             {
-                aux_OUT = aux_IN2 || aux_ANALOG_INT;
+                aux_OUT = (aux_IN2 || aux_ANALOG_INT);
             }
             if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
             {
-                aux_OUT = aux_IN3 || aux_IN1;
+                aux_OUT = (aux_IN3 || aux_IN1);
             }
             if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
             {
-                aux_OUT = aux_IN3 || aux_IN2;
+                aux_OUT = (aux_IN3 || aux_IN2);
             }
             if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
             {
-                aux_OUT = aux_IN3 || aux_IN4;
+                aux_OUT = (aux_IN3 || aux_IN4);
             }
             if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
             {
-                aux_OUT = aux_IN3 || aux_ANALOG_INT;
+                aux_OUT = (aux_IN3 || aux_ANALOG_INT);
             }
             if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
             {
-                aux_OUT = aux_IN4 || aux_IN1;
+                aux_OUT = (aux_IN4 || aux_IN1);
             }
             if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
             {
-                aux_OUT = aux_IN4 || aux_IN2;
+                aux_OUT = (aux_IN4 || aux_IN2);
             }
             if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
             {
-                aux_OUT = aux_IN4 || aux_IN3;
+                aux_OUT = (aux_IN4 || aux_IN3);
             }
             if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
             {
-                aux_OUT = aux_IN4 || aux_ANALOG_INT;
+                aux_OUT = (aux_IN4 || aux_ANALOG_INT);
             }
             if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
             {
-                aux_OUT = aux_ANALOG_INT || in_01;
+                aux_OUT = (aux_ANALOG_INT || in_01);
             }
             if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
             {
-                aux_OUT = aux_ANALOG_INT || aux_IN2;
+                aux_OUT = (aux_ANALOG_INT || aux_IN2);
             }
             if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
             {
-                aux_OUT = aux_ANALOG_INT || aux_IN3;
+                aux_OUT = (aux_ANALOG_INT || aux_IN3);
             }
             if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
             {
-                aux_OUT = aux_ANALOG_INT || aux_IN4;
+                aux_OUT = (aux_ANALOG_INT || aux_IN4);
             }
             digitalWrite(out_01, aux_OUT);
         }
+//============================================================================================================================
 
+
+//============================================================================================================================
         // Caso OPERAÇÃO 1 SEJA NOT (código 4) e OPERAÇÃO 2 seja NADA, apenas uma entrada pode estar selecionada
         if (tsk1_op_1 == 4 && tsk1_op_2 == 1)
         {
@@ -928,43 +959,77 @@ void task_logica1(void *parametro)
             }
             digitalWrite(out_01, aux_OUT);
         }
+//============================================================================================================================
 
+
+//============================================================================================================================
         // Caso OPERAÇÃO 1 SEJA DELAY (código 5) e OPERAÇÃO 2 seja NADA, apenas uma entrada pode estar selecionada
         if (tsk1_op_1 == 5 && tsk1_op_2 == 1)
         {
             // Caso a operação seja direto com a entrada
             if (tsk1_in_1 == 2 && tsk1_in_2 == 1)
             {
-                delay(tsk1_op_delay);
+              if(aux_IN1)
+              {
+                delay(tsk1_op_delay*1000);
+                Serial.println("DelayAcionado");
                 aux_OUT = aux_IN1;
+              }
+              else
+              {aux_OUT = 0;}
             }
             if (tsk1_in_1 == 3 && tsk1_in_2 == 1)
             {
-                delay(tsk1_op_delay);
+              if(aux_IN2)
+              {
+                delay(tsk1_op_delay*1000);
                 aux_OUT = aux_IN2;
+              }
+              else
+              {aux_OUT = 0;}
             }
+            
             if (tsk1_in_1 == 4 && tsk1_in_2 == 1)
             {
-                delay(tsk1_op_delay);
+              if(aux_IN3)
+              {
+                delay(tsk1_op_delay*1000);
                 aux_OUT = aux_IN3;
+              }
+              else
+              {aux_OUT = 0;}
             }
             if (tsk1_in_1 == 5 && tsk1_in_2 == 1)
             {
-                delay(tsk1_op_delay);
+              if(aux_IN4)
+              {
+                delay(tsk1_op_delay*1000);
                 aux_OUT = aux_IN4;
+              }
+              else
+              {aux_OUT = 0;}
             }
             if (tsk1_in_1 == 6 && tsk1_in_2 == 1)
             {
-                delay(tsk1_op_delay);
+              if(aux_ANALOG_INT)
+              {
+                delay(tsk1_op_delay*1000);
                 aux_OUT = aux_ANALOG_INT;
+              }
+              else
+              {aux_OUT = 0;}
             }
             digitalWrite(out_01, aux_OUT);
         }
+//============================================================================================================================
 
+
+//============================================================================================================================
         // Casos com duas operações
+
         // Verifica se tem 2 entradas e se tem duas operações
-        if (tsk1_op_1 != 1 && tsk1_op_2 != 1 && tsk1_in_1 != 1 && tsk1_in_2 != 1)
-        {
+        //if (tsk1_op_1 != 1 && tsk1_op_2 != 1 && tsk1_in_1 != 1 && tsk1_in_2 != 1)
+        //{
 
             // Caso OPERAÇÃO 1 SEJA AND (código 2) e OPERAÇÃO 2 seja NOT (código 4), ambos os inputs devem ser != de NADA
             if (tsk1_op_1 == 2 && tsk1_op_2 == 4)
@@ -972,437 +1037,439 @@ void task_logica1(void *parametro)
                 // Caso a entrada 1 e 2 sejam as mesmas
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN1 && aux_IN1;
+                    out_parcial = (aux_IN1 && aux_IN1);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN2 && aux_IN2;
+                    out_parcial = (aux_IN2 && aux_IN2);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN3 && aux_IN3;
+                    out_parcial = (aux_IN3 && aux_IN3);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN4 && aux_IN4;
+                    out_parcial = (aux_IN4 && aux_IN4);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_ANALOG_INT && aux_ANALOG_INT;
+                    out_parcial = (aux_ANALOG_INT && aux_ANALOG_INT);
                 }
                 // Casos onde as entradas são diferentes
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN1 && aux_IN2;
+                    out_parcial = (aux_IN1 && aux_IN2);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN1 && aux_IN3;
+                    out_parcial = (aux_IN1 && aux_IN3);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN1 && aux_IN4;
+                    out_parcial = (aux_IN1 && aux_IN4);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN1 && aux_ANALOG_INT;
+                    out_parcial = (aux_IN1 && aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN2 && aux_IN3;
+                    out_parcial = (aux_IN2 && aux_IN3);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN2 && aux_IN3;
+                    out_parcial = (aux_IN2 && aux_IN3);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN2 && aux_IN4;
+                    out_parcial = (aux_IN2 && aux_IN4);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN2 && aux_ANALOG_INT;
+                    out_parcial = (aux_IN2 && aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN3 && aux_IN1;
+                    out_parcial = (aux_IN3 && aux_IN1);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN3 && aux_IN2;
+                    out_parcial = (aux_IN3 && aux_IN2);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN3 && aux_IN4;
+                    out_parcial = (aux_IN3 && aux_IN4);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN3 && aux_ANALOG_INT;
+                    out_parcial = (aux_IN3 && aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN4 && aux_IN1;
+                    out_parcial = (aux_IN4 && aux_IN1);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN4 && aux_IN2;
+                    out_parcial = (aux_IN4 && aux_IN2);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN4 && aux_IN3;
+                    out_parcial = (aux_IN4 && aux_IN3);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN4 && aux_ANALOG_INT;
+                    out_parcial = (aux_IN4 && aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_ANALOG_INT && aux_IN1;
+                    out_parcial = (aux_ANALOG_INT && aux_IN1);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_ANALOG_INT && aux_IN2;
+                    out_parcial = (aux_ANALOG_INT && aux_IN2);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_ANALOG_INT && aux_IN3;
+                    out_parcial = (aux_ANALOG_INT && aux_IN3);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_ANALOG_INT && aux_IN4;
+                    out_parcial = (aux_ANALOG_INT && aux_IN4);
                 }
-                aux_OUT = !out_parcial;
-                digitalWrite(out_01, aux_OUT);
+                aux_OUT = !(out_parcial);
             }
 
             // Caso OPERAÇÃO 1 SEJA OR (código 3) e OPERAÇÃO 2 seja NOT (código 4), ambos os inputs devem ser != de NADA
-            if (tsk1_op_1 == 2 && tsk1_op_2 == 4)
+            if (tsk1_op_1 == 3 && tsk1_op_2 == 4)
             {
                 // Caso a entrada 1 e 2 sejam as mesmas
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN1 || aux_IN1;
+                    out_parcial = (aux_IN1 || aux_IN1);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN2 || aux_IN2;
+                    out_parcial = (aux_IN2 || aux_IN2);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN3 || aux_IN3;
+                    out_parcial = (aux_IN3 || aux_IN3);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN4 || aux_IN4;
+                    out_parcial = (aux_IN4 || aux_IN4);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_ANALOG_INT || aux_ANALOG_INT;
+                    out_parcial = (aux_ANALOG_INT || aux_ANALOG_INT);
                 }
                 // Casos onde as entradas são diferentes
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN1 || aux_IN2;
+                    out_parcial = (aux_IN1 || aux_IN2);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN1 || aux_IN3;
+                    out_parcial = (aux_IN1 || aux_IN3);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN1 || aux_IN4;
+                    out_parcial = (aux_IN1 || aux_IN4);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN1 || aux_ANALOG_INT;
+                    out_parcial = (aux_IN1 || aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN2 || aux_IN3;
+                    out_parcial = (aux_IN2 || aux_IN3);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN2 || aux_IN3;
+                    out_parcial = (aux_IN2 || aux_IN3);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN2 || aux_IN4;
+                    out_parcial = (aux_IN2 || aux_IN4);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN2 || aux_ANALOG_INT;
+                    out_parcial = (aux_IN2 || aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN3 || aux_IN1;
+                    out_parcial = (aux_IN3 || aux_IN1);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN3 || aux_IN2;
+                    out_parcial = (aux_IN3 || aux_IN2);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN3 || aux_IN4;
+                    out_parcial = (aux_IN3 || aux_IN4);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN3 || aux_ANALOG_INT;
+                    out_parcial = (aux_IN3 || aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN4 || aux_IN1;
+                    out_parcial = (aux_IN4 || aux_IN1);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN4 || aux_IN2;
+                    out_parcial = (aux_IN4 || aux_IN2);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN4 || aux_IN3;
+                    out_parcial = (aux_IN4 || aux_IN3);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN4 || aux_ANALOG_INT;
+                    out_parcial = (aux_IN4 || aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_ANALOG_INT || in_01;
+                    out_parcial = (aux_ANALOG_INT || aux_IN1);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_ANALOG_INT || aux_IN2;
+                    out_parcial = (aux_ANALOG_INT || aux_IN2);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_ANALOG_INT || aux_IN3;
+                    out_parcial = (aux_ANALOG_INT || aux_IN3);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_ANALOG_INT || aux_IN4;
+                    out_parcial = (aux_ANALOG_INT || aux_IN4);
                 }
-                aux_OUT = !out_parcial;
-                digitalWrite(out_01, aux_OUT);
+                aux_OUT = !(out_parcial);
             }
             // Caso OPERAÇÃO 1 SEJA AND (código 2) e OPERAÇÃO 2 seja DELAY (código 5), ambos os inputs devem ser != de NADA
-            if (tsk1_op_1 == 2 && tsk1_op_2 == 4)
+            if (tsk1_op_1 == 2 && tsk1_op_2 == 5)
             {
                 // Caso a entrada 1 e 2 sejam as mesmas
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN1 && aux_IN1;
+                    out_parcial = (aux_IN1 && aux_IN1);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN2 && aux_IN2;
+                    out_parcial = (aux_IN2 && aux_IN2);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN3 && aux_IN3;
+                    out_parcial = (aux_IN3 && aux_IN3);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN4 && aux_IN4;
+                    out_parcial = (aux_IN4 && aux_IN4);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_ANALOG_INT && aux_ANALOG_INT;
+                    out_parcial = (aux_ANALOG_INT && aux_ANALOG_INT);
                 }
                 // Casos onde as entradas são diferentes
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN1 && aux_IN2;
+                    out_parcial = (aux_IN1 && aux_IN2);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN1 && aux_IN3;
+                    out_parcial = (aux_IN1 && aux_IN3);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN1 && aux_IN4;
+                    out_parcial = (aux_IN1 && aux_IN4);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN1 && aux_ANALOG_INT;
+                    out_parcial = (aux_IN1 && aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN2 && aux_IN3;
+                    out_parcial = (aux_IN2 && aux_IN3);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN2 && aux_IN3;
+                    out_parcial = (aux_IN2 && aux_IN3);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN2 && aux_IN4;
+                    out_parcial = (aux_IN2 && aux_IN4);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN2 && aux_ANALOG_INT;
+                    out_parcial = (aux_IN2 && aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN3 && aux_IN1;
+                    out_parcial = (aux_IN3 && aux_IN1);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN3 && aux_IN2;
+                    out_parcial = (aux_IN3 && aux_IN2);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN3 && aux_IN4;
+                    out_parcial = (aux_IN3 && aux_IN4);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN3 && aux_ANALOG_INT;
+                    out_parcial = (aux_IN3 && aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN4 && aux_IN1;
+                    out_parcial = (aux_IN4 && aux_IN1);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN4 && aux_IN2;
+                    out_parcial = (aux_IN4 && aux_IN2);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN4 && aux_IN3;
+                    out_parcial = (aux_IN4 && aux_IN3);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN4 && aux_ANALOG_INT;
+                    out_parcial = (aux_IN4 && aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_ANALOG_INT && aux_IN1;
+                    out_parcial = (aux_ANALOG_INT && aux_IN1);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_ANALOG_INT && aux_IN2;
+                    out_parcial = (aux_ANALOG_INT && aux_IN2);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_ANALOG_INT && aux_IN3;
+                    out_parcial = (aux_ANALOG_INT && aux_IN3);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_ANALOG_INT && aux_IN4;
+                    out_parcial = (aux_ANALOG_INT && aux_IN4);
                 }
-                delay(1000);
+                delay(tsk1_op_delay*1000);
                 aux_OUT = out_parcial;
-                digitalWrite(out_01, aux_OUT);
             }
 
             // Caso OPERAÇÃO 1 SEJA OR (código 3) e OPERAÇÃO 2 seja DELAY (código 5), ambos os inputs devem ser != de NADA
-            if (tsk1_op_1 == 2 && tsk1_op_2 == 4)
+            if (tsk1_op_1 == 3 && tsk1_op_2 == 5)
             {
                 // Caso a entrada 1 e 2 sejam as mesmas
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN1 || aux_IN1;
+                    out_parcial = (aux_IN1 || aux_IN1);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN2 || aux_IN2;
+                    out_parcial = (aux_IN2 || aux_IN2);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN3 || aux_IN3;
+                    out_parcial = (aux_IN3 || aux_IN3);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN4 || aux_IN4;
+                    out_parcial = (aux_IN4 || aux_IN4);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_ANALOG_INT || aux_ANALOG_INT;
+                    out_parcial = (aux_ANALOG_INT || aux_ANALOG_INT);
                 }
                 // Casos onde as entradas são diferentes
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN1 || aux_IN2;
+                    out_parcial = (aux_IN1 || aux_IN2);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN1 || aux_IN3;
+                    out_parcial = (aux_IN1 || aux_IN3);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN1 || aux_IN4;
+                    out_parcial = (aux_IN1 || aux_IN4);
                 }
                 if (tsk1_in_1 == 2 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN1 || aux_ANALOG_INT;
+                    out_parcial = (aux_IN1 || aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN2 || aux_IN3;
+                    out_parcial = (aux_IN2 || aux_IN3);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN2 || aux_IN3;
+                    out_parcial = (aux_IN2 || aux_IN3);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN2 || aux_IN4;
+                    out_parcial = (aux_IN2 || aux_IN4);
                 }
                 if (tsk1_in_1 == 3 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN2 || aux_ANALOG_INT;
+                    out_parcial = (aux_IN2 || aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN3 || aux_IN1;
+                    out_parcial = (aux_IN3 || aux_IN1);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN3 || aux_IN2;
+                    out_parcial = (aux_IN3 || aux_IN2);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_IN3 || aux_IN4;
+                    out_parcial = (aux_IN3 || aux_IN4);
                 }
                 if (tsk1_in_1 == 4 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN3 || aux_ANALOG_INT;
+                    out_parcial = (aux_IN3 || aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_IN4 || aux_IN1;
+                    out_parcial = (aux_IN4 || aux_IN1);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_IN4 || aux_IN2;
+                    out_parcial = (aux_IN4 || aux_IN2);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_IN4 || aux_IN3;
+                    out_parcial = (aux_IN4 || aux_IN3);
                 }
                 if (tsk1_in_1 == 5 && tsk1_in_2 == 6)
                 {
-                    out_parcial = aux_IN4 || aux_ANALOG_INT;
+                    out_parcial = (aux_IN4 || aux_ANALOG_INT);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 2)
                 {
-                    out_parcial = aux_ANALOG_INT || aux_IN1;
+                    out_parcial = (aux_ANALOG_INT || aux_IN1);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 3)
                 {
-                    out_parcial = aux_ANALOG_INT || aux_IN2;
+                    out_parcial = (aux_ANALOG_INT || aux_IN2);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 4)
                 {
-                    out_parcial = aux_ANALOG_INT || aux_IN3;
+                    out_parcial = (aux_ANALOG_INT || aux_IN3);
                 }
                 if (tsk1_in_1 == 6 && tsk1_in_2 == 5)
                 {
-                    out_parcial = aux_ANALOG_INT || aux_IN4;
+                    out_parcial = (aux_ANALOG_INT || aux_IN4);
                 }
-                delay(1000);
+                delay(tsk1_op_delay*1000);
                 aux_OUT = out_parcial;
-                digitalWrite(out_01, aux_OUT);
             }
-        } 
+          digitalWrite(out_01, aux_OUT);
+
+
+          
+          
+        //}
+//============================================================================================================================ 
     }
     Serial.printf("aux_OUT : %d", aux_OUT);
 }
@@ -1543,10 +1610,10 @@ void setup()
     pinMode(bt_mm, INPUT_PULLUP);
     pinMode(bt_ok, INPUT_PULLUP);
 
-    pinMode(in_01, INPUT_PULLUP);
-    pinMode(in_02, INPUT_PULLUP);
-    pinMode(in_03, INPUT_PULLUP);
-    pinMode(in_04, INPUT_PULLUP);
+    pinMode(in_01, INPUT);
+    pinMode(in_02, INPUT);
+    pinMode(in_03, INPUT);
+    pinMode(in_04, INPUT);
     pinMode(a_in_01, INPUT);
 
     pinMode(out_01, OUTPUT);
